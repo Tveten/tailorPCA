@@ -46,8 +46,9 @@ change_cor_mat <- function(R, affected.dims,
     }
     R.changed <- as.matrix(nearPD(R.changed, 
                                   corr = TRUE, 
-                                  eig.tol = 1e-10,
-                                  maxit = 10^3)$mat)
+                                  maxit = 20,
+                                  do2eigen = TRUE,
+                                  posd.tol = 1e-8)$mat)
   }
   
   N <- ncol(R)

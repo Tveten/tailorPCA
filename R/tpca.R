@@ -1,17 +1,19 @@
 tpca <- function(cov_mat, 
+                 change_distr = 'full_uniform',
                  cutoff = 0.99, 
                  n_sim  = 10^3,
-                 print = TRUE, ...) {
+                 print = TRUE) {
   
+  # TODO: How to input change distribution?
   # TODO: Write structure.
   # TODO: How to handle too large covariance matrices and correlation changes
   # (due to slowness of nearPD())
   
-  ## Testing inputs.
+  ## Make sure inputs are as expected. ----
   assertthat::assert_that(is.numeric(cov_mat),
                           msg = 'cov_mat is not numeric.')
   assertthat::assert_that(class(cov_mat) == 'matrix',
-                          msg = 'cov_mat is not of class "matrix". Construct your matrix by matrix() or convert your object by using as.matrix()."')
+                          msg = 'cov_mat is not of class "matrix".')
   assertthat::assert_that(isSymmetric(cov_mat), 
                           msg = 'cov_mat is not a symmetric matrix.')
   assertthat::assert_that(is_positive_definite(cov_mat),
@@ -21,7 +23,7 @@ tpca <- function(cov_mat,
   assertthat::assert_that(is_whole_number(n_sim), n_sim > 0,
                           msg = 'n_sim must be an integer larger than 0.')
   
-  ## Make sure we are working on a correlation matrix from now on.
+  ## Make sure we are working on a correlation matrix from now on. ----
   if(!is_cor_mat(cov_mat)) {
     sd_vec <- sqrt(diag(cov_mat))
     sd_inv_mat <- diag(1/sd_vec)
