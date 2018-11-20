@@ -21,47 +21,47 @@ draw_change <- function(cor_mat, change_funcs, change_type, change_sparsity) {
 }
 
 change_cor_mat <- function(cor_mat, affected_dims, 
-                           draw_rho = NULL, draw_sigma = NULL) {
+                           draw_cor = NULL, draw_sd = NULL) {
   # At least one of the NULL-arguments must be supplied:
-  #   functions draw_rho or draw_sigma
+  #   functions draw_cor or draw_sigma
   #
   # Returns:
   #   Sigma2: The change covariance matrix.
-  change_cor <- function(cor_mat, draw_rho, n.affected) {
-    affected_cor_dims <- sample(1:cor_mat_sparsity, min(n.affected, cor_mat_sparsity))
+  change_cor <- function(cor_mat, draw_cor, sparsity) {
+    affected_cor_dims <- sample(1:cor_mat_sparsity, min(sparsity, cor_mat_sparsity))
     ind <- combn(affected_cor_dims, 2)
-    change_factor <- draw_rho(sum(1:length(ind)))
+    change_factor <- draw_cor(sum(1:length(ind)))
     post_cor_mat <- cor_mat
     for (i in 1:ncol(ind)) {
       post_cor_mat[ind[1, i], ind[2, i]] <- change_factor[i] * post_cor_mat[ind[1, i], ind[2, i]]
-      post_cor_mat[ind[2, i], ind[1, i]] <- change.factor[i] * post_cor_mat[ind[2, i], ind[1, i]]
+      post_cor_mat[ind[2, i], ind[1, i]] <- change_factor[i] * post_cor_mat[ind[2, i], ind[1, i]]
     }
-    post_cor_mat <- as.matrix(nearPD(post_cor_mat, 
-                                     corr     = TRUE, 
-                                     maxit    = 20,
-                                     do2eigen = TRUE,
-                                     posd.tol = 1e-8)$mat)
+    post_cor_mat <- as.matrix(Matrix::nearPD(post_cor_mat, 
+                                             corr     = TRUE, 
+                                             maxit    = 20,
+                                             do2eigen = TRUE,
+                                             posd.tol = 1e-8)$mat)
   }
   
   msg <- 'ERROR: Either a variance or a correlation change distribution must be specified'
-  assertthat::assert_that(all(is.null(c(draw_rho, draw_sigma))), msg = msg)
+  assertthat::assert_that(!is.null(draw_cor) || !is.null(draw_sd) , msg = msg)
   
   data_dim <- ncol(cor_mat)
   cor_mat_sparsity <- sum(cor_mat[, 1] != 0)
-  change_sparsity <- length(affected.dims)
+  change_sparsity <- length(affected_dims)
   post_cov_mat <- cor_mat
   
   # Correlation change handling
-  if (!is.null(draw_rho)) {
+  if (!is.null(draw_cor)) {
     ind <- 1:cor_mat_sparsity
     sub_cor_mat <- cor_mat[ind, ind, drop = FALSE]
-    post_cov_mat[ind, ind] <- change_cor(sub_cor_mat, draw_rho, change_sparsity)
+    post_cov_mat[ind, ind] <- change_cor(sub_cor_mat, draw_cor, change_sparsity)
   }
   
   # Variance change handling
-  if (!is.null(draw_sigma)) {
+  if (!is.null(draw_sd)) {
     post_sd <- rep(1, data_dim)
-    post_sd[affected_dims] <- draw_sigma(change_sparsity)
+    post_sd[affected_dims] <- draw_sd(change_sparsity)
     post_cov_mat <- diag(post_sd) %*% post_cov_mat %*% diag(post_sd)
   }
   

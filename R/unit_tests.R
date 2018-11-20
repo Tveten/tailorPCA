@@ -27,3 +27,8 @@ test_is_cor_mat <- function() {
   if (is_cor_mat(generate_cor_mat(10))) print('Yey')
   else print('Ney')
 }
+
+test_tpca <- function() {
+  cov_mat1 <- generate_cov_mat(10)
+  h_sim <- tpca(cov_mat1, n_sim = 10)
+}

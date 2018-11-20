@@ -21,6 +21,7 @@ set_uniform_cd <- function(prob        = rep(1/3, 3),
   sparsities_expr <- substitute(sparsities)
   
   function(data_dim) {
+    # TODO: Error handling of sparsities.
     sparsities <- eval(sparsities_expr)
     list(
     'draw_types'      = function(n_sim) {

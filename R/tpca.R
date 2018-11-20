@@ -34,8 +34,8 @@ tpca <- function(cov_mat,
   }
   
   data_dim <- ncol(cor_mat_orig)
-  pca_obj <- pca(cor_mat_orig)
-  V <- pca.obj$vectors
+  pca_obj <- pca(cor_mat_orig, eigen_values = TRUE)
+  V <- pca_obj$vectors
   
   pre_mean_proj <- rep(0, data_dim)
   pre_sd_proj <- pca_obj$values
@@ -46,6 +46,7 @@ tpca <- function(cov_mat,
   
   # TODO: Make a FO that records results from draw_change in a list here,
   #       to avoid having to call anything from change_funcs here.
+  # QUESTION: Add if-clauses for different change types to increase speed?
   hellinger_sim <- vapply(1:n_sim, function(b) {
     post_param_orig <- draw_change(cor_mat_orig, change_funcs, 
                                    change_type[b], change_sparsity[b])
@@ -59,3 +60,4 @@ tpca <- function(cov_mat,
   # structure(return_list, class = 'tpca')
   hellinger_sim
 }
+

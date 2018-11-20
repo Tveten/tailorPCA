@@ -6,17 +6,17 @@ library(todor)
 
 # TODO: 
 
-pca <- function(Sigma, p_axes = 1:N, eigen.values = FALSE) {
-  N <- nrow(Sigma)
-  if (eigen.values) {
-    eigen.obj <- svd(Sigma, nv = 0)
-    A <- t(eigen.obj$u[, i.PC])
-    lambda <- eigen.obj$d[i.PC]
-    return(list('vectors' = A, 'values' = lambda))
+pca <- function(cov_mat, axes = 1:p, eigen_values = FALSE) {
+  p <- nrow(cov_mat)
+  if (eigen_values) {
+    eigen_obj <- svd(cov_mat, nv = 0)
+    V <- t(eigen_obj$u[, axes])
+    lambda <- eigen_obj$d[axes]
+    return(list('vectors' = V, 'values' = lambda))
   } else {
-    eigen.obj <- svd(Sigma, nv = 0)
-    A <- t(eigen.obj$u[, i.PC])
-    return(A)
+    eigen_obj <- svd(cov_mat, nv = 0)
+    V <- t(eigen_obj$u[, axes])
+    return(V)
   }
 }
 
@@ -27,53 +27,8 @@ calc_hellinger <- function(mu1, sigma1, mu2, sigma2) {
 }
 
 
-change_cor_mat <- function(R, affected.dims, 
-                           draw_rho = NULL, draw_sigma = NULL) {
-  # At least one of the NULL-arguments must be supplied:
-  #   functions draw_rho or draw_sigma
-  #
-  # Returns:
-  #   Sigma2: The change covariance matrix.
-  
-  change_cor <- function(R.sub, draw_rho, n.affected) {
-    affected.cor.dims <- sample(1:K0, min(n.affected, K0))
-    ind <- combn(affected.cor.dims, 2)
-    change.factor <- draw_rho(sum(1:length(ind)))
-    R.changed <- R.sub
-    for (i in 1:ncol(ind)) {
-      R.changed[ind[1, i], ind[2, i]] <- change.factor[i] * R.changed[ind[1, i], ind[2, i]]
-      R.changed[ind[2, i], ind[1, i]] <- change.factor[i] * R.changed[ind[2, i], ind[1, i]]
-    }
-    R.changed <- as.matrix(nearPD(R.changed, 
-                                  corr = TRUE, 
-                                  maxit = 20,
-                                  do2eigen = TRUE,
-                                  posd.tol = 1e-8)$mat)
-  }
-  
-  N <- ncol(R)
-  K0 <- sum(R[, 1] != 0)
-  K <- length(affected.dims)
-  Sigma2 <- R
-  
-  if (all(is.null(c(draw_rho, draw_sigma))))
-    stop('ERROR: Either a variance or a correlation change distribution must be specified')
-  
-  # Correlation change handling
-  if (!is.null(draw_rho)) {
-    R.sub <- R[1:K0, 1:K0, drop = FALSE]
-    Sigma2[1:K0, 1:K0] <- change_cor(R.sub, draw_rho, K)
-  }
-  
-  # Variance change handling
-  if (!is.null(draw_sigma)) {
-    sigma2.vec <- rep(1, N)
-    sigma2.vec[affected.dims] <- draw_sigma(K)
-    Sigma2 <- diag(sigma2.vec) %*% Sigma2 %*% diag(sigma2.vec)
-  }
-  
-  return(Sigma2)
-}
+
+
 
 
 est_hellinger <- function(Sigma1.x, PCA.obj, n.sim = 10^3, 
