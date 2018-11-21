@@ -28,34 +28,34 @@ change_cor_mat <- function(cor_mat, affected_dims,
   # Returns:
   #   Sigma2: The change covariance matrix.
   change_cor <- function(cor_mat, draw_cor, sparsity) {
+    cor_mat_sparsity <- sum(cor_mat[, 1] != 0)
     affected_cor_dims <- sample(1:cor_mat_sparsity, min(sparsity, cor_mat_sparsity))
-    ind <- combn(affected_cor_dims, 2)
-    change_factor <- draw_cor(sum(1:length(ind)))
+    ind <- t(combn(affected_cor_dims, 2))
+    change_factor <- draw_cor(nrow(ind))
+    
     post_cor_mat <- cor_mat
-    for (i in 1:ncol(ind)) {
-      post_cor_mat[ind[1, i], ind[2, i]] <- change_factor[i] * post_cor_mat[ind[1, i], ind[2, i]]
-      post_cor_mat[ind[2, i], ind[1, i]] <- change_factor[i] * post_cor_mat[ind[2, i], ind[1, i]]
-    }
-    post_cor_mat <- as.matrix(Matrix::nearPD(post_cor_mat, 
-                                             corr     = TRUE, 
-                                             maxit    = 20,
-                                             do2eigen = TRUE,
-                                             posd.tol = 1e-8)$mat)
+    post_cor <- change_factor * cor_mat[ind]
+    post_cor_mat[ind] <- post_cor
+    post_cor_mat[ind[, c(2, 1)]] <- post_cor
+    
+    maxit <- max(200 - ncol(cor_mat), 0)
+    as.matrix(Matrix::nearPD(post_cor_mat,
+                                 corr     = TRUE,
+                                 maxit    = maxit,
+                                 do2eigen = TRUE,
+                                 posd.tol = 1e-8)$mat)
   }
   
   msg <- 'ERROR: Either a variance or a correlation change distribution must be specified'
   assertthat::assert_that(!is.null(draw_cor) || !is.null(draw_sd) , msg = msg)
   
   data_dim <- ncol(cor_mat)
-  cor_mat_sparsity <- sum(cor_mat[, 1] != 0)
   change_sparsity <- length(affected_dims)
   post_cov_mat <- cor_mat
   
   # Correlation change handling
   if (!is.null(draw_cor)) {
-    ind <- 1:cor_mat_sparsity
-    sub_cor_mat <- cor_mat[ind, ind, drop = FALSE]
-    post_cov_mat[ind, ind] <- change_cor(sub_cor_mat, draw_cor, change_sparsity)
+    post_cov_mat <- change_cor(cor_mat, draw_cor, change_sparsity)
   }
   
   # Variance change handling
@@ -67,5 +67,3 @@ change_cor_mat <- function(cor_mat, affected_dims,
   
   post_cov_mat
 }
-
-

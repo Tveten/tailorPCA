@@ -1,4 +1,5 @@
 library(clusterGeneration)
+library(microbenchmark)
 
 generate_cor_mat <- function(N, K0 = N) {
   # k : Sparsity level, number of correlated dimensions.
@@ -28,7 +29,35 @@ test_is_cor_mat <- function() {
   else print('Ney')
 }
 
-test_tpca <- function() {
-  cov_mat1 <- generate_cov_mat(10)
-  h_sim <- tpca(cov_mat1, n_sim = 10)
+test_tpca <- function(data_dim = 10, n_sim = 10, change_distr = 'full_uniform') {
+  cov_mat1 <- generate_cov_mat(data_dim)
+  tpca(cov_mat1, n_sim = n_sim, change_distr = change_distr)
+}
+
+test_change_cor <- function(data_dim = 10, sparsity = data_dim/2) {
+  set.seed(10)
+  cor_mat1 <- generate_cor_mat(data_dim)
+  affected_dims <- sample(1:data_dim, sparsity)
+  draw_cor <- get_change_distr('cor_only', data_dim)$draw_cor
+  post_cor_mat <- change_cor_mat(cor_mat1, affected_dims, draw_cor = draw_cor)
+  post_cor_mat - cor_mat1
+}
+
+test_change_sd <- function(data_dim = 10, sparsity = data_dim/2) {
+  set.seed(10)
+  cor_mat1 <- generate_cor_mat(data_dim)
+  affected_dims <- sample(1:data_dim, sparsity)
+  draw_sd <- get_change_distr('sd_only', data_dim)$draw_sd
+  change_cor_mat(cor_mat1, affected_dims, draw_sd = draw_sd)
+}
+
+benchmark_change_func <- function() {
+  microbenchmark(
+    test_change_sd(100),
+    test_change_cor(100)
+  )
+}
+
+benchmark_tpca <- function() {
+  microbenchmark(test_tpca(100, 1000))
 }

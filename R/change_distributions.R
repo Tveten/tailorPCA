@@ -50,6 +50,30 @@ change_distr_env$full_uniform <- set_uniform_cd(prob        = rep(1/3, 3),
                                                 sd_inc_prob = 0.5,
                                                 cor_int     = c(0, 1))
 
+change_distr_env$mean_only <- 
+  set_uniform_cd(prob        = c(1, 0, 0), 
+                 sparsities  = 2:data_dim,
+                 mean_int    = c(-1.5, 1.5), 
+                 sd_int      = c(2.5^(-1), 2.5),
+                 sd_inc_prob = 0.5,
+                 cor_int     = c(0, 1))
+
+change_distr_env$sd_only <- 
+  set_uniform_cd(prob        = c(0, 1, 0), 
+                 sparsities  = 2:data_dim,
+                 mean_int    = c(-1.5, 1.5), 
+                 sd_int      = c(2.5^(-1), 2.5),
+                 sd_inc_prob = 0.5,
+                 cor_int     = c(0, 1))
+
+change_distr_env$cor_only <- 
+  set_uniform_cd(prob        = c(0, 0, 1), 
+                 sparsities  = 2:data_dim,
+                 mean_int    = c(-1.5, 1.5), 
+                 sd_int      = c(2.5^(-1), 2.5),
+                 sd_inc_prob = 0.5,
+                 cor_int     = c(0, 1))
+
 get_change_distr <- function(change_distr_str, data_dim) {
   assertthat::assert_that(is.character(change_distr_str))
   change_distr <- change_distr_env[[change_distr_str]](data_dim)
