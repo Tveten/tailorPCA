@@ -56,7 +56,7 @@ tpca <- function(cov_mat,
   pca_obj <- pca(cor_mat_orig, eigen_values = TRUE)
   V <- pca_obj$vectors
   pre_mean_proj <- rep(0, data_dim)
-  pre_sd_proj <- pca_obj$values
+  pre_sd_proj <- sqrt(pca_obj$values)
   
   # TODO: Make a FO that records results from draw_change in a list here,
   #       to avoid having to call anything from change_funcs here.

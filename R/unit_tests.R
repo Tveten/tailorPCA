@@ -75,13 +75,13 @@ benchmark_tpca <- function() {
 }
 
 compare_tpca <- function(data_dim = 10, n_sim = 10^3) {
-  set.seed(10)
+  set.seed(20)
   cov_mat1 <- generate_cor_mat(data_dim, K0 = data_dim)
   hellinger_tpca <- tpca(cov_mat1, n_sim = n_sim, change_distr = 'full_uniform')
   hellinger_est_tpca <- rowMeans(hellinger_tpca)
   
   hellinger_est_old <- est_hellinger(cov_mat1, pca(cov_mat1, eigen_values = TRUE)) 
   print(hellinger_est_tpca - hellinger_est_old)
-  plot(hellinger_est_tpca, type = 'l', col = 'red')
+  plot(hellinger_est_tpca, type = 'l', col = 'red', ylim = c(0, 1))
   lines(hellinger_est_old, col = 'blue')
 }

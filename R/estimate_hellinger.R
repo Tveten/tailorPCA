@@ -47,7 +47,7 @@ est_hellinger <- function(Sigma1.x, PCA.obj, n.sim = 10^3,
   # Default change distributions
   p <- rep(1/3, 3)  # Probability of each type of change.
   draw_k <- function(n) {
-    sample(2:(N/2), n, replace = TRUE)
+    sample(2:N, n, replace = TRUE)
   }
   draw_mu <- function(n) {
     runif(n, -1.5, 1.5)
@@ -96,12 +96,12 @@ est_hellinger <- function(Sigma1.x, PCA.obj, n.sim = 10^3,
       hellinger.sim[, b] <- round(calc_hellinger(mu1, sigma1, mu2, sigma1), 6)
     } 
     if (change.type[b] == 'sigma') {
-      Sigma2.x <- change_cor_mat(Sigma1.x, affected.dims, draw_sigma = draw_sigma)
+      Sigma2.x <- change_cor_mat(Sigma1.x, affected.dims, draw_sd = draw_sigma)
       sigma2 <- sqrt(apply(U, 1, function(u) u %*% Sigma2.x %*% u))
       hellinger.sim[, b] <- round(calc_hellinger(mu1, sigma1, mu1, sigma2), 6)
     } 
     if (change.type[b] == 'rho') {
-      Sigma2.x <- change_cor_mat(Sigma1.x, affected.dims, draw_rho = draw_rho)
+      Sigma2.x <- change_cor_mat(Sigma1.x, affected.dims, draw_cor = draw_rho)
       sigma2 <- sqrt(apply(U, 1, function(u) u %*% Sigma2.x %*% u))
       hellinger.sim[, b] <- round(calc_hellinger(mu1, sigma1, mu1, sigma2), 6)
     }
