@@ -34,6 +34,18 @@ test_tpca <- function(data_dim = 10, n_sim = 10, change_distr = 'full_uniform') 
   tpca(cov_mat1, n_sim = n_sim, change_distr = change_distr)
 }
 
+test_tpca_custom <- function(data_dim = 10, n_sim = 10, ...) {
+  cov_mat1 <- generate_cov_mat(data_dim)
+  tpca(cov_mat1, n_sim = n_sim, change_distr = set_uniform_cd(data_dim, ...))
+}
+
+test_tpca_est <- function(data_dim = 10, n_sim = 10, change_distr = 'full_uniform') {
+  cov_mat1 <- generate_cor_mat(data_dim, K0 = data_dim)
+  hellinger_sims <- tpca(cov_mat1, n_sim = n_sim, change_distr = change_distr)
+  hellinger_est <- rowMeans(hellinger_sims)
+  plot(hellinger_est, type = 'l')
+}
+
 test_change_cor <- function(data_dim = 10, sparsity = data_dim/2) {
   set.seed(10)
   cor_mat1 <- generate_cor_mat(data_dim)
@@ -60,4 +72,16 @@ benchmark_change_func <- function() {
 
 benchmark_tpca <- function() {
   microbenchmark(test_tpca(100, 1000))
+}
+
+compare_tpca <- function(data_dim = 10, n_sim = 10^3) {
+  set.seed(10)
+  cov_mat1 <- generate_cor_mat(data_dim, K0 = data_dim)
+  hellinger_tpca <- tpca(cov_mat1, n_sim = n_sim, change_distr = 'full_uniform')
+  hellinger_est_tpca <- rowMeans(hellinger_tpca)
+  
+  hellinger_est_old <- est_hellinger(cov_mat1, pca(cov_mat1, eigen_values = TRUE)) 
+  print(hellinger_est_tpca - hellinger_est_old)
+  plot(hellinger_est_tpca, type = 'l', col = 'red')
+  lines(hellinger_est_old, col = 'blue')
 }
