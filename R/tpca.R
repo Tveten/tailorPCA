@@ -13,9 +13,7 @@ tpca <- function(cov_mat,
   #   max_axes: 
   #   n_sim: 
   
-  # TODO: Add handling of different divergence metrics.
-  
-  ## Make sure inputs are as expected. ----
+  ## Make sure inputs are as expected. -----------------------------------------
   #  cov_mat:
   assertthat::assert_that(is.numeric(cov_mat), !any(is.na(cov_mat)))
   assertthat::assert_that(class(cov_mat) == 'matrix',
@@ -47,7 +45,7 @@ tpca <- function(cov_mat,
   change_type <- change_funcs$draw_types(n_sim)
   change_sparsity <- change_funcs$draw_sparsities(n_sim)
   
-  ## Make sure we are working on a correlation matrix from now on. ----
+  ## Make sure we are working on a correlation matrix from now on. -------------
   if(!is_cor_mat(cov_mat)) {
     sd_vec <- sqrt(diag(cov_mat))
     sd_inv_mat <- diag(1/sd_vec)
@@ -75,7 +73,6 @@ tpca <- function(cov_mat,
   
   return_list <- list('axes'            = V[most_sensitive_axes, ], 
                       'which_axes'      = most_sensitive_axes, 
-                      'summaries'       = NULL, 
                       'divergence_sim'  = divergence_sim,
                       'change_type'     = change_type,
                       'change_sparsity' = change_sparsity)
