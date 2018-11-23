@@ -29,7 +29,7 @@ test_is_cor_mat <- function() {
   else print('Ney')
 }
 
-test_tpca <- function(data_dim = 10, n_sim = 10, change_distr = 'full_uniform') {
+test_tpca <- function(data_dim = 10, n_sim = 10^3, change_distr = 'full_uniform') {
   cov_mat1 <- generate_cov_mat(data_dim)
   tpca(cov_mat1, n_sim = n_sim, change_distr = change_distr)
 }

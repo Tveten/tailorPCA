@@ -21,7 +21,8 @@ set_uniform_cd <- function(data_dim,
   assertthat::assert_that(is.numeric(prob), !any(is.na(prob)))
   prob_length_msg = paste0('prob =', prob, 'has to be a vector of length 3.')
   assertthat::assert_that(length(prob) == 3, msg = prob_msg)
-  prob_msg = paste0('prob =', prob, 'is not a probability (summing to one and elements between 0 and 1).')
+  prob_msg = paste0('prob =', prob, 
+                    'is not a probability (summing to one and elements between 0 and 1).')
   assertthat::assert_that(is_prob(prob), msg = prob_msg)
   
   #  sparsities:
@@ -116,7 +117,8 @@ get_change_distr <- function(change_distr_str, data_dim) {
   change_distr <- change_distr_env[[change_distr_str]]
   # msg = paste0('The supplied change distribution ("', change_distr_str,'") is not implemented. Use ', names(change_distr_env), ', or make your own by using set_uniform_cd()')
   msg = paste0('The supplied change distribution is not implemented. Use ', 
-               paste0(names(change_distr_env), collapse = ', '), ', or make your own by using set_uniform_cd()')
+               paste0(names(change_distr_env), collapse = ', '), 
+               ', or make your own by using set_uniform_cd().')
   assertthat::assert_that(!is.null(change_distr), msg = msg)
   
   change_distr(data_dim)
