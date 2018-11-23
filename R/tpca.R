@@ -1,13 +1,16 @@
 tpca <- function(cov_mat, 
                  change_distr = 'full_uniform',
-                 divergence = 'hellinger',
-                 cutoff = 0.99, 
-                 n_sim  = 10^3) {
+                 divergence   = 'normal_hellinger',
+                 cutoff       = 0.99, 
+                 max_axes     = ncol(cov_mat),
+                 n_sim        = 10^3,
+                 print_which  = TRUE) {
   # Input:
   #   cov_mat: 
   #   change_distr: 
   #   divergence:
   #   cutoff: 
+  #   max_axes: 
   #   n_sim: 
   
   # TODO: Add handling of different divergence metrics.
@@ -22,9 +25,6 @@ tpca <- function(cov_mat,
   assertthat::assert_that(is_positive_definite(cov_mat),
                           msg = 'cov_mat is not positive definite (some eigenvalues are < 1e-8).')
   
-  
-  #  divergence:
-  
   #  cutoff:
   assertthat::assert_that(is_in_interval(cutoff, interval = c(0, 1)),
                           msg = 'cutoff must be a numeric between 0 and 1.')
@@ -32,6 +32,9 @@ tpca <- function(cov_mat,
   #  n_sim:
   assertthat::assert_that(is_whole_number(n_sim), n_sim > 0,
                           msg = 'n_sim must be an integer larger than 0.')
+  
+  #  divergence:
+  divergence_func <- get_divergence(divergence)
   
   #  change_distr:
   data_dim <- ncol(cov_mat)
@@ -58,20 +61,25 @@ tpca <- function(cov_mat,
   pre_mean_proj <- rep(0, data_dim)
   pre_sd_proj <- sqrt(pca_obj$values)
   
-  # TODO: Make a FO that records results from draw_change in a list here,
-  #       to avoid having to call anything from change_funcs here.
-  # QUESTION: Add if-clauses for different change types to increase speed?
-  hellinger_sim <- vapply(1:n_sim, function(b) {
+  divergence_sim <- vapply(1:n_sim, function(b) {
     post_param_orig <- draw_change(cor_mat_orig, change_funcs, 
                                    change_type[b], change_sparsity[b])
     post_mean_proj <- V %*% post_param_orig$mean
     post_sd_proj <- sqrt(apply(V, 1, function(v) v %*% post_param_orig$cov_mat %*% v))
-    calc_hellinger(pre_mean_proj, pre_sd_proj, post_mean_proj, post_sd_proj)
+    divergence_func(pre_mean_proj, pre_sd_proj, post_mean_proj, post_sd_proj)
   },
   numeric(data_dim))
-  # return_list <- list(axes, which_axes, summaries, hellinger_sim)
-  # if (print) print(which_axes)
-  # structure(return_list, class = 'tpca')
-  hellinger_sim
+  
+  prop_max <- prop_axes_argmax(divergence_sim)
+  most_sensitive_axes <- which_axes(prop_max, cutoff, max_axes)
+  
+  return_list <- list('axes'            = V[most_sensitive_axes, ], 
+                      'which_axes'      = most_sensitive_axes, 
+                      'summaries'       = NULL, 
+                      'divergence_sim'  = divergence_sim,
+                      'change_type'     = change_type,
+                      'change_sparsity' = change_sparsity)
+  if (print_which) print(most_sensitive_axes)
+  invisible(structure(return_list, class = 'tpca'))
 }
 
