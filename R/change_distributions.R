@@ -1,3 +1,18 @@
+#' Title
+#'
+#' Description
+#'
+#' Detailed description.
+#'
+#' @param n_sim
+#' @param print_which
+#'
+#' @return
+#'
+#' @examples 
+#' 
+#' @export
+
 set_uniform_cd <- function(data_dim,
                            prob        = rep(1/3, 3), 
                            sparsities  = 2:data_dim,

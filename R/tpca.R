@@ -1,3 +1,31 @@
+#' Tailors the choice of principal axes to a set of distributional changes
+#'
+#' Here goes the description.
+#'
+#' Detailed description.
+#'
+#' @param cov_mat A covariance matrix, i.e., a numeric matrix that is positive
+#'   definite.
+#' @param change_distr A string or a change distribution object. A string can be
+#'   used to choose among a set of already implemented distributions:
+#'   'full_uniform', 'mean_only', 'sd_only', 'cor_only'. Custom change
+#'   distributions can be specified by using the \code{\link{set_uniform_cd()}}
+#'   function.
+#' @param divergence A string specifying which divergence metric to use.
+#' @param cutoff A numeric between 0 and 1 governing how many principal axes to
+#'   retain.
+#' @param max_axes
+#' @param n_sim
+#' @param print_which
+#'
+#' @return
+#'
+#' @examples 
+#' 
+#' @aliases tailorPCA tailoredPCA
+#' 
+#' @export
+
 tpca <- function(cov_mat, 
                  change_distr = 'full_uniform',
                  divergence   = 'normal_hellinger',
@@ -5,13 +33,6 @@ tpca <- function(cov_mat,
                  max_axes     = ncol(cov_mat),
                  n_sim        = 10^3,
                  print_which  = TRUE) {
-  # Input:
-  #   cov_mat: 
-  #   change_distr: 
-  #   divergence:
-  #   cutoff: 
-  #   max_axes: 
-  #   n_sim: 
   
   ## Make sure inputs are as expected. -----------------------------------------
   #  cov_mat:
