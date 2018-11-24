@@ -123,16 +123,3 @@ get_change_distr <- function(change_distr_str, data_dim) {
   
   change_distr(data_dim)
 }
-
-# add_change_distr <- function(name,
-#                              prob        = rep(1/3, 3), 
-#                              sparsities  = 2:data_dim,
-#                              mean_int    = c(-1.5, 1.5), 
-#                              sd_int      = c(2.5^(-1), 2.5), 
-#                              sd_inc_prob = 0.5,
-#                              cor_int     = c(0, 1) ) {
-#   assertthat::assert_that(is.character(name))
-#   change_distr_env[[name]] <- function(data_dim) {
-#     set_uniform_cd(data_dim, prob, sparsities, mean_int, sd_int, sd_inc_prob, cor_int)
-#   }
-# }
