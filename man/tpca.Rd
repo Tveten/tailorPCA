@@ -70,6 +70,21 @@ which dimensions that are affected by a change is always randomized.
 The more information about which changes that are of interest, the better and
 less general the choice of axes will be.
 
+Built in choices for change distributions are implemented as calls to
+\code{\link{set_uniform_cd}}:
+\describe{
+  \item{"full_uniform" (default)}{\code{set_uniform_cd(data_dim, 
+                                             prob        = rep(1/3, 3), 
+                                             sparsities  = 2:data_dim,
+                                             mean_int    = c(-1.5, 1.5), 
+                                             sd_int      = c(2.5^(-1), 2.5),
+                                             sd_inc_prob = 0.5,
+                                             cor_int     = c(0, 1))}}
+  \item{"mean_only"}{\code{set_uniform_cd(data_dim, prob = c(1, 0, 0))}}
+  \item{"sd_only"}{\code{set_uniform_cd(data_dim, prob = c(0, 1, 0))}}
+  \item{"cor_only"}{\code{set_uniform_cd(data_dim, prob = c(0, 0, 1))}}
+}
+
 See the references for more information.
 }
 \examples{
