@@ -20,18 +20,25 @@ assert_natural_number <- function(n) {
 assert_in_interval <- function(x, interval) {
   interval_msg <- paste0(x, ' must be a numeric between ', interval[1], 
                          ' and ', interval[2], '.')
-  assertthat::assert_that(is_in_interval(x, interval), msg = interval_msg)
   assertthat::assert_that(all(is_in_interval(x, interval)), msg = interval_msg)
 }
 
-assert_class_length_noNA <- function(x, is_class, l) {
-  length_msg <- paste0(x, 'must have length ', l, '.')
-  assertthat::assert_that(length(x) == l, msg = length_msg)
+assert_class_length_noNA <- function(x, is_class, l = NULL) {
+  if (!is.null(l)) {
+    length_msg <- paste0(x, 'must have length ', l, '.')
+    assertthat::assert_that(length(x) == l, msg = length_msg)
+  }
   na_msg <- paste0(x, 'cannot be NA.')
   assertthat::assert_that(!is.na(x), msg = na_msg)
   is_class_str <- deparse(substitute(is_class))
   class_msg <- paste0(x, ' must be ', is_class_str)
   assertthat::assert_that(is_class(x), msg = class_msg)
+}
+
+assert_prob <- function(p) {
+  prob_msg = paste0('prob =', p, 
+                    'is not a probability (summing to one and elements between 0 and 1).')
+  assertthat::assert_that(is_prob(prob), msg = prob_msg)
 }
 
 is_whole_number <- function(x, tol = .Machine$double.eps^0.5)  {
