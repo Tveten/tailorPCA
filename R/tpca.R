@@ -33,8 +33,7 @@ tpca <- function(cov_mat,
                  divergence   = 'normal_hellinger',
                  cutoff       = 0.99, 
                  max_axes     = ncol(cov_mat),
-                 n_sim        = 10^3,
-                 print_which  = TRUE) {
+                 n_sim        = 10^3) {
   
   ## Make sure inputs are as expected. -----------------------------------------
   assert_cov_mat(cov_mat)
@@ -81,7 +80,6 @@ tpca <- function(cov_mat,
                       'divergence_sim'  = divergence_sim,
                       'change_type'     = change_type,
                       'change_sparsity' = change_sparsity)
-  if (print_which) print(most_sensitive_axes)
   invisible(structure(return_list, class = 'tpca'))
 }
 
