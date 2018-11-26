@@ -76,12 +76,15 @@ set_uniform_cd <- function(data_dim,
   
   assert_class_length_noNA(sd_int, is.numeric, 2)
   assert_interval(sd_int)
+  assert_in_interval(sd_int, c(sqrt(.Machine$double.eps), 
+                               1/sqrt(.Machine$double.eps)))
   
   assert_class_length_noNA(sd_inc_prob, is.numeric, 1)
   assert_in_interval(sd_inc_prob, c(0, 1))
   
   assert_class_length_noNA(cor_int, is.numeric, 2)
   assert_interval(cor_int)
+  assert_in_interval(cor_int, c(0, 1))
   
   ## MAIN ----------------------------------------------------------------------
   return_list <- list(
