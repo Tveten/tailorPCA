@@ -6,14 +6,13 @@ divergence_env$normal_hellinger <-
            exp(-1/4 * (mu1 - mu2)^2 / (sigma1^2 + sigma2^2)))
   }
 
-get_divergence <- function(name) {
-  assertthat::assert_that(is.character(name))
-  divergence <- divergence_env[[name]]
+get_divergence <- function(divergence_name) {
+  assert_class_length_noNA(divergence_name, is.character, 1)
+  divergence <- divergence_env[[divergence_name]]
   msg = paste0('The supplied divergence is not implemented. Use ', 
                paste0(names(divergence_env), collapse = ', '), 
                ', or add your own by using add_divergence().')
   assertthat::assert_that(!is.null(divergence), msg = msg)
-  
   divergence
 }
 
