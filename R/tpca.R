@@ -1,8 +1,26 @@
-#' Tailors the choice of principal axes to a distribution over changes
+#' Tailors the choice of principal components for change detection
 #'
-#' Here goes the description.
+#' \code{tpca} tailors the choice of principal components to keep when detection
+#' of changepoints in the mean vector or covariance matrix is the aim. The
+#' choice of principal axes to project data onto is based on a normal state
+#' covariance matrix and a distribution over relevant change scenarios.
 #'
-#' Detailed description.
+#' This method is based on simulating changes to a distribution, followed by 
+#' measuring the principal axes' sensitivity to each change by a statistical 
+#' divergence. The most sensitive axis is recorded in each simulated change to 
+#' estimate the probability of an axis being the most sensitive one over the
+#' range of changes specified by a change distribution. 
+#' 
+#' Custom change distributions can be built by using the function 
+#' \code{\link{set_uniform_cd}}. All components of the distribution are uniform,
+#' but the probability/importance of each type of change can be specified, along
+#' with the sparsity of the change, and all the sizes and directions of the 
+#' changes. In each simulation run, after a change sparsity has been drawn,
+#' which dimensions that are affected by a change is always randomized.
+#' The more information about which changes that are of interest, the better and
+#' less general the choice of axes will be.
+#' 
+#' See the references for more information.
 #'
 #' @param cov_mat A covariance matrix, i.e., a numeric matrix that is positive
 #'   definite.
@@ -15,12 +33,28 @@
 #'   Available options: 'normal_hellinger'.
 #' @param cutoff A numeric between 0 and 1 governing how many principal axes to
 #'   retain.
-#' @param max_axes An integer. Is there a maximum number of axes that should be
-#'   returned, regardless of what the cutoff is?
-#' @param n_sim An 
+#' @param max_axes An integer indicating the maximum number of axes that should be
+#'   returned regardless of what the cutoff is.
+#' @param n_sim An integer specifying the number of simulation runs.
 #' @param print_which
 #'
-#' @return
+#' @return \code{tpca} returns an S3 object of class "tpca". This is a list with 
+#' the following components:
+#' \describe{
+#'   \item{\code{axes}}{A matrix with the chosen principal axes as rows, 
+#'   ordered in decreasing order of sensitivity.}
+#'   \item{\code{which_axes}}{A vector indicating which principal axes that were
+#'   chosen.}
+#'   \item{\code{divergence_sim}}{A matrix containing all the simulated draws 
+#'   from the divergence metric along each principal axis. It is of dimension 
+#'   data_dim x n_sim.}
+#'   \item{\code{change_type}}{A character vector indicating the type of change 
+#'   for each iteration of the simulation.}
+#'   \item{\code{change_sparsity}}{A numeric vector indicating the sparsity of 
+#'   the change for each iteration of the simulation.}
+#' }
+#'
+#' @references 
 #'
 #' @examples 
 #' 
