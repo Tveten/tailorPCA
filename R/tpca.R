@@ -75,7 +75,7 @@ tpca <- function(cov_mat,
   prop_axes_max <- prop_axes_max(divergence_sim)
   most_sensitive_axes <- which_axes(prop_axes_max, cutoff, max_axes)
   
-  return_list <- list('axes'            = V[most_sensitive_axes, ], 
+  return_list <- list('axes'            = V[most_sensitive_axes, , drop = FALSE], 
                       'which_axes'      = most_sensitive_axes, 
                       'divergence_sim'  = divergence_sim,
                       'change_type'     = change_type,
