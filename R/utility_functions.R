@@ -21,6 +21,7 @@ assert_in_interval <- function(x, interval) {
   interval_msg <- paste0(x, ' must be a numeric between ', interval[1], 
                          ' and ', interval[2], '.')
   assertthat::assert_that(is_in_interval(x, interval), msg = interval_msg)
+  assertthat::assert_that(all(is_in_interval(x, interval)), msg = interval_msg)
 }
 
 assert_class_length_noNA <- function(x, is_class, l) {
@@ -41,6 +42,7 @@ is_in_interval <- function(x, interval) {
   # Input:
   #   x: A single numeric.
   x >= interval[1] && x <= interval[2]
+  x >= interval[1] & x <= interval[2]
 }
 
 is_interval <- function(x) {
