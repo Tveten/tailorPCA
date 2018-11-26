@@ -46,9 +46,6 @@ is_whole_number <- function(x, tol = .Machine$double.eps^0.5)  {
 }
 
 is_in_interval <- function(x, interval) {
-  # Input:
-  #   x: A single numeric.
-  x >= interval[1] && x <= interval[2]
   x >= interval[1] & x <= interval[2]
 }
 
