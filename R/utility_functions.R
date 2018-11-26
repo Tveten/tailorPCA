@@ -1,43 +1,61 @@
 assert_cov_mat <- function(cov_mat) {
-  cov_mat_str <- deparse(substitute(cov_mat))
-  na_msg <- paste0(cov_mat_str, ' cannot contain NAs.')
+  cov_mat_name <- deparse(substitute(cov_mat))
+  na_msg <- paste0(cov_mat_name, ' cannot contain NAs.')
   assertthat::assert_that(!any(is.na(cov_mat)), msg = na_msg)
-  numeric_msg <- paste0(cov_mat_str, ' must be numeric.')
+  numeric_msg <- paste0(cov_mat_name, ' must be numeric.')
   assertthat::assert_that(is.numeric(cov_mat), msg = numeric_msg)
-  matrix_msg <- paste0(cov_mat_str, ' must be of class "matrix".')
+  matrix_msg <- paste0(cov_mat_name, ' must be of class "matrix".')
   assertthat::assert_that(class(cov_mat) == 'matrix', msg = matrix_msg)
-  symmetric_msg <- paste0(cov_mat_str, ' is not a symmetric matrix.')
+  symmetric_msg <- paste0(cov_mat_name, ' is not a symmetric matrix.')
   assertthat::assert_that(isSymmetric(cov_mat), msg = symmetric_msg)
-  posdef_msg <- paste0(cov_mat_str, ' is not a positive definite matrix (some eigenvalues are < 1e-8).')
+  posdef_msg <- paste0(cov_mat_name, ' is not a positive definite matrix (some eigenvalues are < 1e-8).')
   assertthat::assert_that(is_positive_definite(cov_mat), msg = posdef_msg)
 }
 
 assert_natural_number <- function(n) {
-  msg <- paste0(n, 'must be an integer larger than 0.')
+  n_name <- deparse(substitute(n))
+  msg <- paste0(n_name, 'must be an integer larger than 0.')
   assertthat::assert_that(is_whole_number(n), n > 0, msg = msg)
 }
 
 assert_in_interval <- function(x, interval) {
-  interval_msg <- paste0(x, ' must be a numeric between ', interval[1], 
+  x_name <- deparse(substitute(x))
+  interval_msg <- paste0(x_name, ' must be a numeric between ', interval[1], 
                          ' and ', interval[2], '.')
   assertthat::assert_that(all(is_in_interval(x, interval)), msg = interval_msg)
 }
 
+assert_integer_in_interval <- function(x, interval) {
+  x_name <- deparse(substitute(x))
+  int_interval_msg <- paste0(x_name, ' must be an integer between ', interval[1], 
+                         ' and ', interval[2], '.')
+  assertthat::assert_that(all(is_in_interval(x, interval)), 
+                          all(is_whole_number(x)),
+                          msg = int_interval_msg)
+}
+
+assert_interval <- function(x) {
+  x_name <- deparse(substitute(x))
+  interval_msg <- paste0(x_name, ' must be a vector of length 2 where the first element is smaller than or equal two the second.')
+  assertthat::assert_that(is_interval(x), msg = interval_msg)
+}
+
 assert_class_length_noNA <- function(x, is_class, l = NULL) {
+  x_name <- deparse(substitute(x))
   if (!is.null(l)) {
-    length_msg <- paste0(x, 'must have length ', l, '.')
+    length_msg <- paste0(x_name, 'must have length ', l, '.')
     assertthat::assert_that(length(x) == l, msg = length_msg)
   }
-  na_msg <- paste0(x, 'cannot be NA.')
+  na_msg <- paste0(x_name, 'cannot be NA.')
   assertthat::assert_that(!is.na(x), msg = na_msg)
   is_class_str <- deparse(substitute(is_class))
-  class_msg <- paste0(x, ' must be ', is_class_str)
+  class_msg <- paste0(x_name, ' must be ', is_class_str)
   assertthat::assert_that(is_class(x), msg = class_msg)
 }
 
 assert_prob <- function(p) {
-  prob_msg = paste0('prob =', p, 
-                    'is not a probability (summing to one and elements between 0 and 1).')
+  p_name <- deparse(substitute(p))
+  prob_msg = paste0(p_name, ' = ', p, 'is not a probability (summing to one and elements between 0 and 1).')
   assertthat::assert_that(is_prob(prob), msg = prob_msg)
 }
 
@@ -69,9 +87,4 @@ is_prob <- function(p) {
   condition1 <- all(vapply(p, is_in_interval, logical(1), c(0, 1)))
   condition2 <- isTRUE(all.equal(sum(p), 1))
   condition1 && condition2
-}
-
-interval_msg <- function(obj) {
-  obj_name <- deparse(substitute(obj))
-  paste0(obj_name, ' must be a vector of length 2 where the first element is smaller than or equal two the second.')
 }

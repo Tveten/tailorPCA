@@ -4,8 +4,13 @@
 #'
 #' Detailed description.
 #'
-#' @param n_sim
-#' @param print_which
+#' @param data_dim
+#' @param prob
+#' @param sparsities An integer vector between 2 (minimum sparsity for changes in the correlation) and data_dim.
+#' @param mean_int
+#' @param sd_int
+#' @param sd_inc_prob
+#' @param cor_int 
 #'
 #' @return
 #'
@@ -30,40 +35,24 @@ set_uniform_cd <- function(data_dim,
   #   cor_int:     Lower and upper bound for a change in correlation. Must be 
   #                between 0 and 1.
   
-  # TODO: A lot of error handling.
   ## ERROR HANDLING ------------------------------------------------------------
-  #  prob:
-  assertthat::assert_that(is.numeric(prob), !any(is.na(prob)))
-  prob_length_msg = paste0('prob =', prob, 'has to be a vector of length 3.')
-  assertthat::assert_that(length(prob) == 3, msg = prob_msg)
-  prob_msg = paste0('prob =', prob, 
-                    'is not a probability (summing to one and elements between 0 and 1).')
-  assertthat::assert_that(is_prob(prob), msg = prob_msg)
+  assert_class_length_noNA(prob, is.numeric, 3)
+  assert_prob(prob)
   
-  #  sparsities:
-  sparsity.msg <- 'sparsities must be an integer vector between 2 (minimum sparsity for changes in the correlation) and data_dim.'
-  assertthat::assert_that(is.numeric(sparsities), !any(is.na(sparsities)))
-  assertthat::assert_that(all(is_whole_number(sparsities)), 
-                          all(sparsities >= 2),
-                          all(sparsities <= data_dim),
-                          msg = sparsity.msg)
+  assert_class_length_noNA(sparsities, is.numeric)
+  assert_integer_in_interval(sparsities, c(2, data_dim))
   
-  #  mean_int:
-  assertthat::assert_that(is.numeric(mean_int), !any(is.na(mean_int)))
-  assertthat::assert_that(is_interval(mean_int), msg = interval_msg(mean_int))
+  assert_class_length_noNA(mean_int, is.numeric, 2)
+  assert_interval(mean_int)
   
-  #  sd_int:
-  assertthat::assert_that(is.numeric(sd_int), !any(is.na(sd_int)))
-  assertthat::assert_that(is_interval(sd_int), msg = interval_msg(sd_int))
+  assert_class_length_noNA(sd_int, is.numeric, 2)
+  assert_interval(sd_int)
   
-  #  sd_inc_prob:
-  assertthat::assert_that(is.numeric(sd_inc_prob), !is.na(sd_inc_prob))
-  assertthat::assert_that(sd_inc_prob >= 0, sd_inc_prob <= 1,
-                          msg = 'sd_inc_prob must be a value between 0 and 1.')
+  assert_class_length_noNA(sd_inc_prob, is.numeric, 1)
+  assert_in_interval(sd_inc_prob, c(0, 1))
   
-  #  cor_int:
-  assertthat::assert_that(is.numeric(cor_int), !any(is.na(cor_int)))
-  assertthat::assert_that(is_interval(cor_int), msg = interval_msg(cor_int))
+  assert_class_length_noNA(cor_int, is.numeric, 2)
+  assert_interval(cor_int)
   
   ## MAIN ----------------------------------------------------------------------
   return_list <- list(
