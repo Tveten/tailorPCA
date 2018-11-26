@@ -36,7 +36,6 @@
 #' @param max_axes An integer indicating the maximum number of axes that should be
 #'   returned regardless of what the cutoff is.
 #' @param n_sim An integer specifying the number of simulation runs.
-#' @param print_which
 #'
 #' @return \code{tpca} returns an S3 object of class "tpca". This is a list with 
 #' the following components:

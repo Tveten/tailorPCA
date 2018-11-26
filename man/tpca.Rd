@@ -30,8 +30,6 @@ retain.}
 returned regardless of what the cutoff is.}
 
 \item{n_sim}{An integer specifying the number of simulation runs.}
-
-\item{print_which}{}
 }
 \value{
 \code{tpca} returns an S3 object of class "tpca". This is a list with 
