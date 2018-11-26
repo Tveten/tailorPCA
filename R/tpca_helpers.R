@@ -21,6 +21,7 @@ standardize_cov_mat <- function(cov_mat) {
   } else {
     cor_mat_orig <- cov_mat
   }
+  cor_mat_orig
 }
 
 prop_axes_max <- function(divergence_sim) {
