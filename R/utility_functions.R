@@ -14,7 +14,7 @@ assert_cov_mat <- function(cov_mat) {
 
 assert_natural_number <- function(n) {
   n_name <- deparse(substitute(n))
-  msg <- paste0(n_name, 'must be an integer larger than 0.')
+  msg <- paste0(n_name, ' must be an integer larger than 0.')
   assertthat::assert_that(is_whole_number(n), n > 0, msg = msg)
 }
 
@@ -43,10 +43,10 @@ assert_interval <- function(x) {
 assert_class_length_noNA <- function(x, is_class, l = NULL) {
   x_name <- deparse(substitute(x))
   if (!is.null(l)) {
-    length_msg <- paste0(x_name, 'must have length ', l, '.')
+    length_msg <- paste0(x_name, ' must have length ', l, '.')
     assertthat::assert_that(length(x) == l, msg = length_msg)
   }
-  na_msg <- paste0(x_name, 'cannot be NA.')
+  na_msg <- paste0(x_name, ' cannot be NA.')
   assertthat::assert_that(!is.na(x), msg = na_msg)
   is_class_str <- deparse(substitute(is_class))
   class_msg <- paste0(x_name, ' must be ', is_class_str)
@@ -55,7 +55,7 @@ assert_class_length_noNA <- function(x, is_class, l = NULL) {
 
 assert_prob <- function(p) {
   p_name <- deparse(substitute(p))
-  prob_msg = paste0(p_name, ' = ', p, 'is not a probability (summing to one and elements between 0 and 1).')
+  prob_msg = paste0(p_name, ' = ', p, ' is not a probability (summing to one and elements between 0 and 1).')
   assertthat::assert_that(is_prob(prob), msg = prob_msg)
 }
 
