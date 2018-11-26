@@ -126,15 +126,18 @@ change_distr_env$cor_only <- function(data_dim) {
                  cor_int     = c(0, 1))
 }
 
-get_change_distr <- function(change_distr_str, data_dim) {
-  assertthat::assert_that(is.character(change_distr_str))
-  
-  change_distr <- change_distr_env[[change_distr_str]]
-  # msg = paste0('The supplied change distribution ("', change_distr_str,'") is not implemented. Use ', names(change_distr_env), ', or make your own by using set_uniform_cd()')
-  msg = paste0('The supplied change distribution is not implemented. Use ', 
-               paste0(names(change_distr_env), collapse = ', '), 
-               ', or make your own by using set_uniform_cd().')
-  assertthat::assert_that(!is.null(change_distr), msg = msg)
-  
-  change_distr(data_dim)
+get_change_distr <- function(change_distr, data_dim) {
+  if (class(change_distr) == 'change_distr') 
+    return(change_distr)
+  else if (is.character(change_distr)) {
+    assert_class_length_noNA(change_distr, is.character, 1)
+    change_distr_func <- change_distr_env[[change_distr_str]]
+    msg = paste0('The supplied change distribution is not implemented. Use ', 
+                 paste0(names(change_distr_env), collapse = ', '), 
+                 ', or make your own by using the function set_uniform_cd.')
+    assertthat::assert_that(!is.null(change_funcs), msg = msg)
+    return(change_distr_func(data_dim))
+  } else 
+    stop(paste0('change_distr must either be a character string or belong to class change_distr. See set_uniform_cd.'))
+    
 }
