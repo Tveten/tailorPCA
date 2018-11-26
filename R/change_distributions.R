@@ -90,14 +90,14 @@ set_uniform_cd <- function(data_dim,
                         sample(change_types, n_sim, prob = prob, replace = TRUE)
                       },
   'draw_sparsities' = function(n_sim) sample(sparsities, n_sim, replace = TRUE),
-  'draw_dims'       = function(n) sample(1:data_dim, n),
-  'draw_mean'       = function(n) runif(n, mean_int[1], mean_int[2]),
-  'draw_sd'         = function(n) {
-                        sd_increases <- runif(round(sd_inc_prob * n), 1, sd_int[2])
-                        sd_decreases <- runif(n - length(sd_increases), sd_int[1], 1)
-                        sample(c(sd_increases, sd_decreases), n)
+  'draw_dims'       = function(k) sample(1:data_dim, k),
+  'draw_mean'       = function(k) runif(k, mean_int[1], mean_int[2]),
+  'draw_sd'         = function(k) {
+                        sd_increases <- runif(round(sd_inc_prob * k), 1, sd_int[2])
+                        sd_decreases <- runif(k - length(sd_increases), sd_int[1], 1)
+                        sample(c(sd_increases, sd_decreases), k)
                       },
-  'draw_cor'        = function(n) runif(n, cor_int[1], cor_int[2])
+  'draw_cor'        = function(k) runif(k, cor_int[1], cor_int[2])
   )
   structure(return_list, class = 'change_distr')
 }
