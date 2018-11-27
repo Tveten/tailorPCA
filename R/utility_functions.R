@@ -47,7 +47,7 @@ assert_class_length_noNA <- function(x, is_class, l = NULL) {
     assertthat::assert_that(length(x) == l, msg = length_msg)
   }
   na_msg <- paste0(x_name, ' cannot be NA.')
-  assertthat::assert_that(!is.na(x), msg = na_msg)
+  assertthat::assert_that(all(!is.na(x)), msg = na_msg)
   is_class_str <- deparse(substitute(is_class))
   class_msg <- paste0(x_name, ' must be ', is_class_str)
   assertthat::assert_that(is_class(x), msg = class_msg)
