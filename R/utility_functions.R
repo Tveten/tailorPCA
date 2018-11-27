@@ -56,7 +56,7 @@ assert_class_length_noNA <- function(x, is_class, l = NULL) {
 assert_prob <- function(p) {
   p_name <- deparse(substitute(p))
   prob_msg = paste0(p_name, ' is not a probability (summing to one and elements between 0 and 1).')
-  assertthat::assert_that(is_prob(prob), msg = prob_msg)
+  assertthat::assert_that(is_prob(p), msg = prob_msg)
 }
 
 is_whole_number <- function(x, tol = .Machine$double.eps^0.5)  {
@@ -83,7 +83,6 @@ is_positive_definite <- function(cov_mat, tol = 1e-8) {
 }
 
 is_prob <- function(p) {
-  # p: A vector  with probability weights.
   condition1 <- all(vapply(p, is_in_interval, logical(1), c(0, 1)))
   condition2 <- isTRUE(all.equal(sum(p), 1))
   condition1 && condition2
