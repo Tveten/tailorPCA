@@ -55,7 +55,7 @@ assert_class_length_noNA <- function(x, is_class, l = NULL) {
 
 assert_prob <- function(p) {
   p_name <- deparse(substitute(p))
-  prob_msg = paste0(p_name, ' = ', p, ' is not a probability (summing to one and elements between 0 and 1).')
+  prob_msg = paste0(p_name, ' is not a probability (summing to one and elements between 0 and 1).')
   assertthat::assert_that(is_prob(prob), msg = prob_msg)
 }
 
