@@ -12,6 +12,17 @@ pca <- function(cov_mat, axes = 1:p, eigen_values = FALSE) {
   }
 }
 
+which_dims_cor <- function(cov_mat) {
+  dim_is_ind <- function(x) {
+    sum(x == 0) == length(x) - 1
+  }
+
+  data_dim <- ncol(cov_mat)
+  cov_mat[abs(cov_mat) < sqrt(.Machine$double.eps)]
+  ind_dims <- apply(cov_mat, 1, dim_is_ind)
+  (1:data_dim)[!ind_dims]
+}
+
 standardize_cov_mat <- function(cov_mat) {
   # Standardizes a covariance matrix to become a correlation matrix.
   if(!is_cor_mat(cov_mat)) {

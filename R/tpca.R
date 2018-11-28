@@ -104,6 +104,7 @@ tpca <- function(cov_mat,
   
   ## MAIN ----------------------------------------------------------------------
   cor_mat_orig <- standardize_cov_mat(cov_mat)
+  attr(cor_mat_orig, 'which_dims_cor') <- which_dims_cor(cor_mat_orig)
   pca_obj <- pca(cor_mat_orig, eigen_values = TRUE)
   V <- pca_obj$vectors
   pre_mean_proj <- rep(0, data_dim)

@@ -28,9 +28,12 @@ change_cor_mat <- function(cor_mat, affected_dims,
   # Returns:
   #   Sigma2: The change covariance matrix.
   change_cor <- function(cor_mat, draw_cor, sparsity) {
-    cor_mat_sparsity <- sum(cor_mat[, 1] != 0)
-    affected_cor_dims <- sample(1:cor_mat_sparsity, min(sparsity, cor_mat_sparsity))
-    ind <- t(combn(affected_cor_dims, 2))
+    cor_dims <- attr(cor_mat, 'which_dims_cor')
+    cor_mat_sparsity <- length(cor_dims)
+    if (cor_mat_sparsity < data_dim) {
+      affected_dims <- sample(cor_dims, min(sparsity, cor_mat_sparsity))
+    }
+    ind <- t(utils::combn(affected_dims, 2))
     change_factor <- draw_cor(nrow(ind))
     
     post_cor_mat <- cor_mat
