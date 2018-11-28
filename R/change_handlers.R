@@ -39,7 +39,7 @@ change_cor_mat <- function(cor_mat, affected_dims,
     post_cor_mat <- cor_mat
     post_cor <- change_factor * cor_mat[ind]
     post_cor_mat[ind] <- post_cor
-    post_cor_mat[ind[, c(2, 1)]] <- post_cor
+    post_cor_mat[ind[, c(2, 1), drop = FALSE]] <- post_cor
     
     maxit <- max(200 - data_dim, 0)
     as.matrix(Matrix::nearPD(post_cor_mat,
