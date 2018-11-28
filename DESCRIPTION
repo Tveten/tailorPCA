@@ -4,14 +4,12 @@ Title: A function for tailoring PCA to change detection
 Version: 0.0.0.9001
 Author: Martin Tveten
 Maintainer: Martin Tveten <matveten@gmail.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
 Description: Functionality for tailoring the choice of which principal 
     components to keep when detection of changepoints in the mean vector 
     or covariance matrix is the aim. The choice of principal axes to 
     project data onto is based on a normal state covariance matrix and
     a customizable distribution over relevant change scenarios.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
