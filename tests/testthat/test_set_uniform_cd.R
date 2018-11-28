@@ -11,6 +11,8 @@ context('Basic use of a change distribution.')
 #                                sd_inc_prob, cor_int)
 
 test_that('draw_types works as intended', {
+  data_dim <- 50
+  change_distr <- set_uniform_cd(data_dim)
   expect_equal(length(change_distr$draw_types(3)), 3)
   expect_equal(length(change_distr$draw_types(100)), 100)
   expect_true(!any(set_uniform_cd(data_dim, prob = c(0, 0.5, 0.5))$draw_types(100) == 'mean'))
