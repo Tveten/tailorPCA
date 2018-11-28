@@ -20,7 +20,7 @@ draw_change <- function(cor_mat, change_funcs, change_type, change_sparsity) {
        'cov_mat' = post_cov_mat_orig)
 }
 
-change_cor_mat <- function(cor_mat, affected_dims, 
+change_cor_mat <- function(cor_mat, affected_dims, do_nearPD = TRUE,
                            draw_cor = NULL, draw_sd = NULL) {
   # At least one of the NULL-arguments must be supplied:
   #   functions draw_cor or draw_sigma
@@ -41,12 +41,15 @@ change_cor_mat <- function(cor_mat, affected_dims,
     post_cor_mat[ind] <- post_cor
     post_cor_mat[ind[, c(2, 1), drop = FALSE]] <- post_cor
     
-    maxit <- max(200 - data_dim, 0)
-    as.matrix(Matrix::nearPD(post_cor_mat,
-                             corr     = TRUE,
-                             maxit    = maxit,
-                             do2eigen = TRUE,
-                             posd.tol = 1e-8)$mat)
+    if (do_nearPD) {
+      maxit <- max(200 - data_dim, 0)
+      post_cor_mat <- as.matrix(Matrix::nearPD(post_cor_mat,
+                                               corr     = TRUE,
+                                               maxit    = maxit,
+                                               do2eigen = TRUE,
+                                               posd.tol = 1e-8)$mat)
+    }
+    post_cor_mat
   }
   
   msg <- 'ERROR: Either a variance or a correlation change distribution must be specified'
