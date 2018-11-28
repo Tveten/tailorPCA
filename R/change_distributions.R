@@ -65,6 +65,9 @@ set_uniform_cd <- function(data_dim,
                            cor_int     = c(0, 1)) {
   
   ## ERROR HANDLING ------------------------------------------------------------
+  assert_class_length_noNA(data_dim, is.numeric, 1)
+  assert_natural_number(data_dim)
+  
   assert_class_length_noNA(prob, is.numeric, 3)
   assert_prob(prob)
   
