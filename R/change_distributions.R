@@ -155,7 +155,7 @@ get_change_distr <- function(change_distr, data_dim) {
     return(change_distr)
   else if (is.character(change_distr)) {
     assert_class_length_noNA(change_distr, is.character, 1)
-    change_distr_func <- change_distr_env[[change_distr_str]]
+    change_distr_func <- change_distr_env[[change_distr]]
     msg = paste0('The supplied change distribution is not implemented. Use ', 
                  paste0(names(change_distr_env), collapse = ', '), 
                  ', or make your own by using the function set_uniform_cd.')
