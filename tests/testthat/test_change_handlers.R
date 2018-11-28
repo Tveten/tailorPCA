@@ -1,4 +1,3 @@
-library(testthat)
 context('Handling changes to the correlation matrix')
 
 for (i in 1:100) {

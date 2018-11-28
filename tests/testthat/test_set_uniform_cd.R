@@ -1,4 +1,3 @@
-library(testthat)
 context('Basic use of a change distribution.')
 
 # data_dim    <- 50
