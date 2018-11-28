@@ -46,7 +46,6 @@ test_that('Illegal inputs for sparsity generates errors', {
   expect_error(set_uniform_cd(10, sparsities = 1:10))
   expect_error(set_uniform_cd(10, sparsities = rep(1/10, 10)))
   expect_error(set_uniform_cd(10, sparsities = c(NA, 2:9)))
-  expect_error(set_uniform_cd(10, sparsities = c(NULL, 2:9)))
   expect_error(set_uniform_cd(10, sparsities = c(Inf, 2:9)))
 })
 
