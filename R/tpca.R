@@ -95,8 +95,6 @@ tpca <- function(cov_mat,
   assert_class_length_noNA(n_sim, is.numeric, 1)
   assert_natural_number(n_sim)
   
-  assert_class_length_noNA(print_which, is.logical, 1)
-  
   divergence_func <- get_divergence(divergence)
   
   data_dim <- ncol(cov_mat)
