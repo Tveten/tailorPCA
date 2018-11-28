@@ -159,7 +159,7 @@ get_change_distr <- function(change_distr, data_dim) {
     msg = paste0('The supplied change distribution is not implemented. Use ', 
                  paste0(names(change_distr_env), collapse = ', '), 
                  ', or make your own by using the function set_uniform_cd.')
-    assertthat::assert_that(!is.null(change_funcs), msg = msg)
+    assertthat::assert_that(!is.null(change_distr_func), msg = msg)
     return(change_distr_func(data_dim))
   } else 
     stop(paste0('change_distr must either be a character string or belong to class change_distr. See set_uniform_cd.'))
