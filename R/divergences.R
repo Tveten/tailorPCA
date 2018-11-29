@@ -1,4 +1,27 @@
-divergence_env <- new.env(hash = FALSE)
+#' Add a statistical divergence function.
+#'
+#' This function is used to specify a divergence function beyond the three
+#' already implemented ones.
+#' 
+#' After calling this function, your implemented divergence function can used in
+#' \code{\link{tpca}} by the argument \code{divergence = name}.
+#' 
+#' @param name A character string with the name of the divergence.
+#' @param divergence A function with arguments (pre_change_mean, pre_change_sd,
+#' post_change_mean, post_change_sd), that returns the measured divergence.
+#' 
+#' @examples
+#' simple_divergence <- function(mu1, sigma1, mu2, sigma2) {
+#'   (mu2 - mu1)^2 + sigma2^2 / sigma1^2
+#' }
+#' add_divergence('simple', simple_divergence)
+#' tpca(generate_cov_mat(10), divergence = 'simple')
+#
+#' @export
+add_divergence <- function(name, divergence) {
+  divergence_env[[name]] <- divergence
+}
+
 divergence_env$normal_hellinger <- function(mu1, sigma1, mu2, sigma2) {
   sqrt(1 - sqrt(2 * sigma1 * sigma2 / (sigma1^2 + sigma2^2)) *
          exp(-1/4 * (mu1 - mu2)^2 / (sigma1^2 + sigma2^2)))
@@ -24,6 +47,3 @@ get_divergence <- function(divergence_name) {
   divergence
 }
 
-add_divergence <- function(name, divergence) {
-  divergence_env[[name]] <- divergence
-}
