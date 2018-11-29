@@ -1,4 +1,4 @@
-context('tpca')
+context('tpca and tpca_helpers')
 
 test_that('tpca returns sensible output', {
   N <- 10
@@ -14,6 +14,36 @@ test_that('tpca returns sensible output', {
       expect_true(!any(is.na(tpca_obj[[i]])))
       expect_true(!is.null(tpca_obj[[i]]))
       expect_true(!any(is.nan(tpca_obj[[i]])))
+    }
+  }
+})
+
+expect_identical_vectors <- function(x, y) {
+  expect_true(all(x == y))
+}
+
+test_that('which_dims_cor return correct dimensions', {
+  N <- 10
+  K0 <- c(0, 2, 5, 10)
+  cor_mats <- lapply(K0, generate_cor_mat, N = N)
+  which_dims_list <- lapply(cor_mats, which_dims_cor)
+  expected_output <- list(0, 1:2, 1:5, 1:10)
+  Map(expect_identical_vectors, which_dims_list, expected_output)
+})
+
+test_that('which_axes returns correctly', {
+  prop_max <- c(0.01, 0.04, 0.05, 0.1, 0.3, 0.5)
+  keep_prop <- c(0, 0.5, 0.9, 0.93, 1)
+  max_axes <- c(1, 2, 5)
+  expect_list <- list(6, 6, 6, 
+                      6, 6, 6, 
+                      6, 6:5, 6:4,
+                      6, 6:5, 6:3,
+                      6, 6:5, 6:2)
+  for (i in seq_along(keep_prop)) {
+    for (j in seq_along(max_axes)) {
+      expect_identical_vectors(which_axes(prop_max, keep_prop[i], max_axes[j]),
+                               expect_list[[(i - 1) * length(max_axes) + j]])
     }
   }
 })
