@@ -1,7 +1,8 @@
 generate_cor_mat <- function(N, K0 = N) {
-  # k : Sparsity level, number of correlated dimensions.
+  # K0: Sparsity level, number of correlated dimensions.
   
-  # set.seed(652)
+  if (K0 == 0) return(diag(rep(1, N)))
+  
   Sigma <- clusterGeneration::genPositiveDefMat(K0, covMethod = 'onion', 
                                                 rangeVar = c(1, 1))$Sigma
   if (K0 != N) {
@@ -10,7 +11,7 @@ generate_cor_mat <- function(N, K0 = N) {
     Sigma <- cbind(Sigma, zero.mat)
     Sigma <- rbind(Sigma, cbind(t(zero.mat), identity.mat))
   }
-  return(Sigma)
+  Sigma
 }
 
 generate_cov_mat <- function(N, K0 = N, range_sd = c(0.2, 5)) {
