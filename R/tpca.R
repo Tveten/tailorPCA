@@ -45,7 +45,7 @@
 #'   distributions can be specified by using the \code{\link{set_uniform_cd}}
 #'   function.
 #' @param divergence A string specifying which divergence metric to use. 
-#'   Available options: 'normal_hellinger'.
+#'   Available options: 'normal_hellinger', 'normal_KL' and 'normal_bhat'.
 #' @param cutoff A numeric between 0 and 1 governing how many principal axes to
 #'   retain.
 #' @param max_axes An integer indicating the maximum number of axes that should be

@@ -21,7 +21,7 @@ distributions can be specified by using the \code{\link{set_uniform_cd}}
 function.}
 
 \item{divergence}{A string specifying which divergence metric to use. 
-Available options: 'normal_hellinger'.}
+Available options: 'normal_hellinger', 'normal_KL' and 'normal_bhat'.}
 
 \item{cutoff}{A numeric between 0 and 1 governing how many principal axes to
 retain.}

@@ -1,10 +1,18 @@
 divergence_env <- new.env(hash = FALSE)
+divergence_env$normal_hellinger <- function(mu1, sigma1, mu2, sigma2) {
+  sqrt(1 - sqrt(2 * sigma1 * sigma2 / (sigma1^2 + sigma2^2)) *
+         exp(-1/4 * (mu1 - mu2)^2 / (sigma1^2 + sigma2^2)))
+}
 
-divergence_env$normal_hellinger <- 
-  function(mu1, sigma1, mu2, sigma2) {
-    sqrt(1 - sqrt(2 * sigma1 * sigma2 / (sigma1^2 + sigma2^2)) *
-           exp(-1/4 * (mu1 - mu2)^2 / (sigma1^2 + sigma2^2)))
-  }
+divergence_env$normal_KL <- function(mu1, sigma1, mu2, sigma2) {
+  1 / 2 * (sigma2^2 / sigma1^2 + (mu1 - mu2)^2 / sigma1 -
+             1 + log(sigma1^2 / sigma2^2))
+}
+
+divergence_env$normal_bhat <- function(mu1, sigma1, mu2, sigma2) {
+  - 1 / 2 * log(2 * sigma1 * sigma2 / (sigma1^2 + sigma2^2)) + 
+    (mu1 - mu2)^2 / (4 * (sigma1^2 + sigma2^2))
+}
 
 get_divergence <- function(divergence_name) {
   assert_class_length_noNA(divergence_name, is.character, 1)
