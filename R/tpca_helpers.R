@@ -20,6 +20,10 @@ which_dims_cor <- function(cov_mat) {
   data_dim <- ncol(cov_mat)
   cov_mat[abs(cov_mat) < sqrt(.Machine$double.eps)]
   ind_dims <- apply(cov_mat, 1, dim_is_ind)
+  if (sum(ind_dims) == data_dim) {
+    warning('cov_mat is a diagonal matrix, so trying to change correlations will result in error.')
+    return(0)
+  }
   (1:data_dim)[!ind_dims]
 }
 
