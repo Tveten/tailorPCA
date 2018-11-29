@@ -1,7 +1,7 @@
 #' Set a uniform change distribution.
 #'
 #' This function is used to specify a change distribution to be used in
-#' conjuction with the function \code{tpca}. All components of the distribution
+#' conjuction with the function \code{\link{tpca}}. All components of the distribution
 #' (marginal and conditional distributions) are uniform, but the
 #' probability/importance of each type of change can be specified, along with
 #' the range of sparsity of the change, as well as ranges for the sizes and
@@ -55,7 +55,6 @@
 #' @examples 
 #' 
 #' @export
-
 set_uniform_cd <- function(data_dim,
                            prob        = rep(1/3, 3), 
                            sparsities  = 2:data_dim,
