@@ -49,6 +49,6 @@ prop_axes_max <- function(divergence_sim) {
 which_axes <- function(prop_max, keep_prop, max_axes) {
   order_axes <- order(prop_max, decreasing = TRUE)
   cum_prop <- cumsum(prop_max[order_axes])
-  n_keep <- min(sum(cum_prop <= keep_prop) + 1, max_axes)
+  n_keep <- min(sum(cum_prop < keep_prop) + 1, max_axes)
   order_axes[1:n_keep]
 }
