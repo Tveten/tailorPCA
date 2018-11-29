@@ -12,6 +12,16 @@ assert_cov_mat <- function(cov_mat) {
   assertthat::assert_that(is_positive_definite(cov_mat), msg = posdef_msg)
 }
 
+all_equal_logical <- function(x, y, ...) {
+  isTRUE(all.equal(x, y, ...))
+}
+
+is_identity_mat <- function(cov_mat) {
+  data_dim <- ncol(cov_mat)
+  identity_mat <- diag(rep(1, data_dim))
+  all(unlist(Map(all_equal_logical, cov_mat, identity_mat)))
+}
+
 assert_natural_number <- function(n) {
   n_name <- deparse(substitute(n))
   msg <- paste0(n_name, ' must be an integer larger than 0.')
