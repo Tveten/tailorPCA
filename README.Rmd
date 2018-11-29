@@ -1,0 +1,46 @@
+---
+output:
+  github_document:
+    html_preview: true
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, knitr_setup, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  echo = TRUE,
+  out.width='750px', dpi=200,
+  comment = "#>"
+)
+```
+
+# tailorPCA
+
+An `R` package for deciding which principal components of the data that should be kept when detection
+of changepoints in the mean vector or covariance matrix is the aim. The decision is
+*tailored* to a chosen change distribution; a set of relevant distributional changes.
+
+## Overview
+Functionality:
+*
+*
+* 
+* 
+* Summary and plot functions.
+
+A reason to use tpca. Where can it be used
+
+## Installation
+From inside `R`, use the following command:
+```{r install, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("Tveten/tailorPCA")
+# library(tailorPCA)
+```
+
+## Description
+
+## Usage
+
+## References
