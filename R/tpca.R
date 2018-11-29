@@ -58,7 +58,9 @@
 #'   \item{\code{axes}}{A matrix with the chosen principal axes as rows, 
 #'   ordered in decreasing order of sensitivity.}
 #'   \item{\code{which_axes}}{A vector indicating which principal axes that were
-#'   chosen.}
+#'   chosen in decreasing order of sensitivity.}
+#'   \item{\code{prop_axes_max}}{A vector with the proportion of simulations each axis
+#'   was the most sensitive one.}
 #'   \item{\code{divergence_sim}}{A matrix containing all the simulated draws 
 #'   from the divergence metric along each principal axis. It is of dimension 
 #'   data_dim x n_sim.}
@@ -128,6 +130,7 @@ tpca <- function(cov_mat,
   
   return_list <- list('axes'            = V[most_sensitive_axes, , drop = FALSE], 
                       'which_axes'      = most_sensitive_axes, 
+                      'prop_axes_max'   = prop_axes_max,
                       'divergence_sim'  = divergence_sim,
                       'change_type'     = change_type,
                       'change_sparsity' = change_sparsity)
