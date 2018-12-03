@@ -106,3 +106,25 @@ ggplot_sparsity_mean <- function(tpca_obj,
                        labels = legend_labels) +
     scale_size_manual(values = line_sizes, guide = FALSE)
 }
+
+ggplot_quantiles <- function(tpca_obj, 
+                             quantiles = c(0.25, 0.975),
+                             title     = NULL,
+                             xlab      = 'Principal axis nr.',
+                             ylab      = 'Hellinger distance') {
+  divergence_sims <- tpca_obj$divergence_sim
+  data_dim <- nrow(divergence_sims)
+  mean_divergence <- rowMeans(divergence_sims)
+  divergence_quantiles <- apply(divergence_sims, 1, quantile, probs = quantiles)
+  plot_df <- data.frame('axis' = 1:data_dim,
+                        'mean' = mean_divergence)
+  plot_df <- cbind(plot_df, t(divergence_quantiles))
+  plot_df <- melt(plot_df, id.vars = 'axis')
+  ggplot(plot_df, aes(x = axis, y = value, linetype = variable)) +
+    geom_line() +
+    theme_light() +
+    labs(x = xlab, y = ylab) +
+    ggtitle(title) +
+    scale_linetype_manual(guide = FALSE, 
+                          values = c(1, rep(2, nrow(divergence_quantiles))))
+}
