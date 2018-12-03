@@ -61,3 +61,48 @@ ggplot_types_mean <- function(tpca_obj,
     scale_size_manual(values = line_sizes, guide = FALSE)
 }
 
+ggplot_sparsity_mean <- function(tpca_obj, 
+                                 sparsities = unique(tpca_obj$change_sparsity),
+                                 title      = NULL,
+                                 xlab       = 'Principal axis nr.',
+                                 ylab       = 'Hellinger distance') {
+  max.sparsities <- 100
+  sparsities = sort(unique(tpca_obj$change_sparsity))
+  if (length(sparsities) > max.sparsities) {
+    ind <- round(seq(1, length(sparsities), length.out = max.sparsities))
+    sparsities <- sparsities[ind]
+  }
+  
+  data_dim <- nrow(tpca_obj$divergence_sim)
+  sparsity_subsets <- lapply(sparsities, function(sparsity) {
+    subset_sims(tpca_obj, sparsity = sparsity)
+  })
+  sparsity_means <- lapply(sparsity_subsets, rowMeans)
+  sparsity_means[[length(sparsities) + 1]] <-  rowMeans(tpca_obj$divergence_sim)
+  sparsity_means <- do.call('cbind', sparsity_means)
+  
+  colnames(sparsity_means) <- c(sparsities, max(sparsities) + 1)
+  means_df <- melt(sparsity_means, 
+                   varnames   = c('axis', 'K'), 
+                   value.name = 'divergence')
+  means_df$K <- as.factor(means_df$K)
+  
+  label_ind <- seq.int(1, length(sparsities), length.out = min(length(sparsities), 5))
+  legend_labels <- vapply(sparsities[label_ind], 
+                          function(x) paste('K =', x), 
+                          character(1))
+  legend_labels <- c(legend_labels, 'Overall')
+  col <- c(colorRampPalette(c('orange', 'blue'))(length(sparsities)), 'black')
+  line_sizes <- c(rep(0.3, length(col) - 1), 0.6)
+  
+  ggplot(means_df, aes(x = axis, y = divergence, color = K)) +
+    geom_line(aes(size = K)) +
+    theme_light() +
+    labs(x = xlab, y = ylab) +
+    ggtitle(title) +
+    scale_y_continuous(limits = c(0, 1)) +
+    scale_color_manual('Change \n sparsity', values = col,
+                       breaks = c(sparsities[label_ind], max(sparsities) + 1),
+                       labels = legend_labels) +
+    scale_size_manual(values = line_sizes, guide = FALSE)
+}
