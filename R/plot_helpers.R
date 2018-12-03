@@ -1,16 +1,8 @@
-get_type_est <- function(tpca_obj, type) {
-  if (type == 'avg') return(rowMeans(tpca_obj$divergence_sim))
-  else {
-    h.sim.type <- h.obj$sims[, h.obj$type == type, drop = FALSE]
-    rowMeans(h.sim.type, na.rm = TRUE)
-  }
+subset_sims <- function(tpca_obj, type = unique(sim_type), 
+                        sparsity = unique(sim_sparsity)) {
+  sim <- tpca_obj$divergence_sim
+  sim_type <- tpca_obj$change_type
+  sim_sparsity <- tpca_obj$change_sparsity
+  sim[, (sim_type %in% type) & (sim_sparsity %in% sparsity)]
 }
 
-get_sparsity_est <- function(tpca_obj, k) {
-  h.sim.sparsity <- h.obj$sims[, h.obj$sparsity == k, drop = FALSE]
-  sparsity.est <- rowMeans(h.sim.sparsity, na.rm = TRUE)
-  # if (any(is.nan(rowMeans(h.sim.sparsity, na.rm = TRUE)))) 
-  #   print(h.sim.sparsity)
-  if (any(is.nan(sparsity.est))) sparsity.est <- rep_len(NA, length(sparsity.est))
-  sparsity.est
-}
