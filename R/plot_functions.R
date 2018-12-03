@@ -1,10 +1,15 @@
 plot.tpca <- function(tpca_obj, ...) {
   par(ask = TRUE)
+  titles <- list('Estimated probability of axis n being the most sensitive',
+                 'Pointwise 0.25 and 0.975 quantiles of the divergences',
+                 'Estimated divergence for different change types',
+                 'Estimated divergence for different change sparsities')
   plot_funcs <- list(ggplot_prop_max, 
-                     ggplot_ci, 
+                     ggplot_quantiles, 
                      ggplot_types_mean, 
                      ggplot_sparsity_mean)
-  capture.output(lapply(plot_funcs, function(f) f(tpca_obj)))
+  capture.output(Map(function(f, title) f(tpca_obj, title = title),
+                     plot_funcs, titles))
   invisible(NULL)
 }
 
