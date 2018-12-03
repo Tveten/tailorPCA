@@ -1,16 +1,11 @@
 plot.tpca <- function(tpca_obj, ...) {
   par(ask = TRUE)
-  for (i in 1:n_plots) {
-    
-  }
-}
-
-subset_sims <- function(tpca_obj, type = unique(sim_type), 
-                        sparsity = unique(sim_sparsity)) {
-  sim <- tpca_obj$divergence_sim
-  sim_type <- tpca_obj$change_type
-  sim_sparsity <- tpca_obj$change_sparsity
-  sim[, (sim_type %in% type) & (sim_sparsity %in% sparsity)]
+  plot_funcs <- list(ggplot_prop_max, 
+                     ggplot_ci, 
+                     ggplot_types_mean, 
+                     ggplot_sparsity_mean)
+  capture.output(lapply(plot_funcs, function(f) f(tpca_obj)))
+  invisible(NULL)
 }
 
 ggplot_prop_max <- function(tpca_obj, 
