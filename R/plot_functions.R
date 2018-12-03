@@ -9,11 +9,11 @@ plot.tpca <- function(tpca_obj, ...) {
 }
 
 ggplot_prop_max <- function(tpca_obj, 
-                            type = unique(tpca_obj$change_type),
+                            type     = unique(tpca_obj$change_type),
                             sparsity = unique(tpca_obj$change_sparsity),
-                            title = NULL,
-                            xlab = 'Principal axis nr. n',
-                            ylab = 'Proportion n is most sensitive') {
+                            title    = NULL,
+                            xlab     = 'Principal axis nr. n',
+                            ylab     = 'Proportion n is most sensitive') {
   sims <- subset_sims(tpca_obj, type = type, sparsity = sparsity)
   prop_axes_max <- prop_axes_max(sims)
   data_dim <- length(prop_axes_max)
@@ -27,74 +27,37 @@ ggplot_prop_max <- function(tpca_obj,
     scale_y_continuous(limits = c(0, 1))
 }
 
-ggplot_types_mean <- function(tpca_obj) {
-  full_mean <- rowMeans(tpca_obj$divergence_sim)
-  
-  types <- sort(unique(tpca_obj$change_type))
+ggplot_types_mean <- function(tpca_obj, 
+                              types = unique(tpca_obj$change_type),
+                              title = NULL,
+                              xlab  = 'Principal axis nr.',
+                              ylab  = 'Hellinger distance') {
+  data_dim <- nrow(tpca_obj$divergence_sim)
   type_subsets <- lapply(types, function(type) subset_sims(tpca_obj, type = type))
-  type_means <- lapply(sim_subsets, rowMeans)
-  if (any(types == 'mean')) {
-    ind <- which(types == 'mean')
-    name()
-  }
-}
-
-ggplot_types_avg <- function(tpca_obj) {
-  n.cor.mat <- length(h.obj.list)
-  types <- sort(unique(h.obj.list[[1]]$type))
-  N <- length(h.obj.list[[1]]$est)
-  h.est.array <- array(0, dim = c(N, n.cor.mat, length(types)))
-  for (i in 1:n.cor.mat) {
-    for (j in 1:length(types)) {
-      h.est.array[, i, j] <- get_type_est(h.obj.list[[i]], types[j])
-    }
-  }
-  h.est.type <- apply(h.est.array, c(1, 3), mean)
-  h.est.avg <- rowMeans(h.est.type)
+  type_means <- lapply(type_subsets, rowMeans)
   
-  h.est.df <- data.frame(PA.nr = integer(), 
-                         h.est = double(), 
-                         type = character())
-  cols <- c(rainbow(3), 'black')
-  col <- rep(NA, length(types) + 1)
-  if (any(types == 'mu')) {
-    ind <- which(types == 'mu')
-    col[ind] <- cols[1]
-    mean.part <- data.frame(PA.nr = 1:nrow(h.est.type),
-                            h.est = h.est.type[, ind], 
-                            type  = rep('Mean', nrow(h.est.type)))
-    h.est.df <- rbind(h.est.df, mean.part)
-  }
-  if (any(types == 'sigma')) {
-    ind <- which(types == 'sigma')
-    col[ind] <- cols[2]
-    var.part <- data.frame(PA.nr = 1:nrow(h.est.type),
-                           h.est = h.est.type[, ind], 
-                           type  = rep('Variance', nrow(h.est.type)))
-    h.est.df <- rbind(h.est.df, var.part)
-  }
-  if (any(types == 'rho')) {
-    ind <- which(types == 'rho')
-    col[ind] <- cols[3]
-    cor.part <- data.frame(PA.nr = 1:nrow(h.est.type),
-                           h.est = h.est.type[, ind], 
-                           type  = rep('Correlation', nrow(h.est.type)))
-    h.est.df <- rbind(h.est.df, cor.part)
-  }
+  shown_names <- list('mean' = 'Mean', 'sd' = 'Variance', 'cor' = 'Correlation')
+  names(type_means) <- unlist(shown_names[types])
+  type_means$Overall <- rowMeans(tpca_obj$divergence_sim)
   
-  avg.part <- data.frame(PA.nr = 1:nrow(h.est.type),
-                         h.est = h.est.avg,
-                         type = rep('Average', nrow(h.est.type)))
-  h.est.df <- rbind(h.est.df, avg.part)
-  col[length(col)] <- cols[length(cols)]
+  means_df <- melt(type_means, value.name = 'divergence')
+  names(means_df)[2] <- 'type'
+  ordered_levels <- c('Mean', 'Variance', 'Correlation', 'Overall')
+  means_df$type <- factor(means_df$type, levels = ordered_levels)
+  means_df$axis <- rep(1:data_dim, length(types) + 1)
   
-  ggplot(h.est.df, aes(x = PA.nr, y = h.est, color = type)) +
+  line_sizes <- c(0.3, 0.3, 0.3, 0.6)
+  line_cols <- c('#FF0000FF', '#0000FFFF', '#00FF00FF', 'black')
+  names(line_cols) <- ordered_levels
+  names(line_cols) <- ordered_levels
+  
+  ggplot(means_df, aes(x = axis, y = divergence, color = type)) +
     geom_line(aes(size = type)) +
     theme_light() +
-    labs(x = 'Principal axis nr.', y = 'Hellinger distance') +
+    labs(x = xlab, y = ylab) +
+    ggtitle(title) +
     scale_y_continuous(limits = c(0, 1)) +
-    scale_color_manual('Change \n type', values = col) +
-    scale_size_manual(values = c(rep(0.3, length(col) - 1), 0.6),
-                      guide = FALSE)
+    scale_color_manual('Change \n type', values = line_cols) +
+    scale_size_manual(values = line_sizes, guide = FALSE)
 }
 
