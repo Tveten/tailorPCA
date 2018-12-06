@@ -1,15 +1,18 @@
-pca <- function(cov_mat, axes = 1:p, eigen_values = FALSE) {
-  p <- nrow(cov_mat)
-  if (eigen_values) {
-    eigen_obj <- svd(cov_mat, nv = 0)
-    V <- t(eigen_obj$u[, axes])
-    lambda <- eigen_obj$d[axes]
-    return(list('vectors' = V, 'values' = lambda))
-  } else {
-    eigen_obj <- svd(cov_mat, nv = 0)
-    V <- t(eigen_obj$u[, axes])
-    return(V)
-  }
+pca <- function(cov_mat, axes = 1:ncol(cov_mat)) {
+  eigen_obj <- svd(cov_mat, nv = 0)
+  eigen_vectors <- t(eigen_obj$u[, axes])
+  eigen_values <- eigen_obj$d[axes]
+  list('vectors' = eigen_vectors, 'values' = eigen_values)
+}
+
+pca_small <- function(cov_mat, k) {
+  eigen_obj <- RSpectra::eigs_sym(cov_mat, k = k, which = 'LM', sigma = 0)
+  list('vectors' = t(eigen_obj$vectors), 'values' = eigen_obj$values)
+}
+
+pca_large <- function(cov_mat, k) {
+  eigen_obj <- RSpectra::eigs_sym(cov_mat, k = k, which = 'LM')
+  list('vectors' = t(eigen_obj$vectors), 'values' = eigen_obj$values)
 }
 
 which_dims_cor <- function(cov_mat) {

@@ -64,3 +64,26 @@ compare_tpca <- function(data_dim = 10, n_sim = 10^3) {
   plot(hellinger_est_tpca, type = 'l', col = 'red', ylim = c(0, 1))
   lines(hellinger_est_old, col = 'blue')
 }
+
+compare_pca <- function(data_dim) {
+  # Conclusion: Use svd when all eigenvectors/eigenvalues are needed.
+  
+  cor_mat <- generate_cor_mat(data_dim)
+  pca <- pca(cor_mat, axes = 1:(data_dim - 1))
+  pca_small <- pca_small(cor_mat, data_dim - 1)
+  pca_large <- pca_large(cor_mat, data_dim - 1)
+  pca_irlba <- pca_large2(cor_mat, data_dim - 1)
+  print(pca$values - pca_small$values)
+  print(pca$values - pca_large$values)
+  # Unstable for small singular values.
+  print(pca$values - pca_irlba$values)
+}
+
+benchmark_RSpectra <- function(data_dim, k) {
+  # Conclusion: RSpectra faster than irlba (2x for data_dim = 100 and k = 10).
+  cor_mat <- generate_cor_mat(data_dim)
+  microbenchmark::microbenchmark(
+    pca_small(cor_mat, k),
+    pca_large(cor_mat, k)
+  )
+}
