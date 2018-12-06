@@ -18,3 +18,12 @@ rcov_mat <- function(d, k0 = d, range_sd = c(0.2, 5)) {
   sigma <- diag(rep(runif(d, range_sd[1], range_sd[2])))
   sigma %*% R %*% sigma
 }
+
+rcor_mat_est <- function(d, k0 = d, n = 2 * d) {
+  # d:  data dimension
+  # k0: d - k0 is the number of completely independent dimensions.
+  # n:  Number of observations that the estimated cor_mat is based on.
+  Sigma <- rcor_mat(d, k0)
+  Sigma_est <- 1 / (n - 1) * rWishart(1, n, Sigma)[, , 1]
+  standardize_cov_mat(Sigma_est)
+}
