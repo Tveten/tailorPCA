@@ -3,7 +3,7 @@ context('tpca and tpca_helpers')
 test_that('tpca returns sensible output', {
   N <- 10
   n_sim <- 10^2
-  cor_mat <- generate_cov_mat(N, N/2)
+  cor_mat <- rcov_mat(N, N/2)
   cutoffs <- c(0, 0.5, 0.8, 0.9, 0.99, 1)
   for (j in seq_along(cutoffs)) {
     tpca_obj <- tpca(cor_mat, cutoff = cutoffs[j], n_sim = n_sim)
@@ -25,7 +25,7 @@ expect_identical_vectors <- function(x, y) {
 test_that('which_dims_cor return correct dimensions', {
   N <- 10
   K0 <- c(0, 2, 5, 10)
-  cor_mats <- lapply(K0, generate_cor_mat, N = N)
+  cor_mats <- lapply(K0, rcor_mat, N = N)
   which_dims_list <- lapply(cor_mats, which_dims_cor)
   expected_output <- list(0, 1:2, 1:5, 1:10)
   Map(expect_identical_vectors, which_dims_list, expected_output)

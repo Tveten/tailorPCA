@@ -4,7 +4,7 @@ test_that('Correct number of correlations are changed', {
   for (i in 1:100) {
     N <- 20
     K0 <- sample(2:N, 1)
-    cor_mat <- generate_cor_mat(N, K0)
+    cor_mat <- rcor_mat(N, K0)
     attr(cor_mat, 'which_dims_cor') <- which_dims_cor(cor_mat)
     change_funcs <- set_uniform_cd(N)
     change_sparsity <- change_funcs$draw_sparsities(1)
@@ -19,7 +19,7 @@ test_that('Correct number of correlations are changed', {
 
 test_that('Attributes of changed correlation matrix is correct', {
   N <- 20
-  cor_mat <- generate_cor_mat(N, N - 1)
+  cor_mat <- rcor_mat(N, N - 1)
   attr(cor_mat, 'which_dims_cor') <- which_dims_cor(cor_mat)
   change_funcs <- set_uniform_cd(N)
   change_sparsity <- change_funcs$draw_sparsities(1)
@@ -37,7 +37,7 @@ test_that('Correct standard deviations changed', {
   for (i in 1:100) {
     N <- 10
     K0 <- sample(2:N, 1)
-    cor_mat <- generate_cor_mat(N, K0)
+    cor_mat <- rcor_mat(N, K0)
     attr(cor_mat, 'which_dims_cor') <- which_dims_cor(cor_mat)
     change_funcs <- set_uniform_cd(N)
     change_sparsity <- change_funcs$draw_sparsities(1)

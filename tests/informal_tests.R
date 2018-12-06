@@ -1,25 +1,25 @@
 library(microbenchmark)
 
 test_is_cor_mat <- function() {
-  if (!is_cor_mat(generate_cov_mat(10))) print('Yey')
+  if (!is_cor_mat(rcov_mat(10))) print('Yey')
   else print('Ney')
   
-  if (is_cor_mat(generate_cor_mat(10))) print('Yey')
+  if (is_cor_mat(rcor_mat(10))) print('Yey')
   else print('Ney')
 }
 
 test_tpca <- function(data_dim = 10, n_sim = 10^3, change_distr = 'full_uniform') {
-  cov_mat1 <- generate_cov_mat(data_dim)
+  cov_mat1 <- rcov_mat(data_dim)
   tpca(cov_mat1, n_sim = n_sim, change_distr = change_distr)
 }
 
 test_tpca_custom <- function(data_dim = 10, n_sim = 10, ...) {
-  cov_mat1 <- generate_cov_mat(data_dim)
+  cov_mat1 <- rcov_mat(data_dim)
   tpca(cov_mat1, n_sim = n_sim, change_distr = set_uniform_cd(data_dim, ...))
 }
 
 test_tpca_est <- function(data_dim = 10, n_sim = 10, change_distr = 'full_uniform') {
-  cov_mat1 <- generate_cor_mat(data_dim, K0 = data_dim)
+  cov_mat1 <- rcor_mat(data_dim, K0 = data_dim)
   hellinger_sims <- tpca(cov_mat1, n_sim = n_sim, change_distr = change_distr)
   hellinger_est <- rowMeans(hellinger_sims)
   plot(hellinger_est, type = 'l')
@@ -27,7 +27,7 @@ test_tpca_est <- function(data_dim = 10, n_sim = 10, change_distr = 'full_unifor
 
 test_change_cor <- function(data_dim = 10, sparsity = data_dim/2) {
   set.seed(10)
-  cor_mat1 <- generate_cor_mat(data_dim)
+  cor_mat1 <- rcor_mat(data_dim)
   affected_dims <- sample(1:data_dim, sparsity)
   draw_cor <- get_change_distr('cor_only', data_dim)$draw_cor
   post_cor_mat <- change_cor_mat(cor_mat1, affected_dims, draw_cor = draw_cor)
@@ -36,7 +36,7 @@ test_change_cor <- function(data_dim = 10, sparsity = data_dim/2) {
 
 test_change_sd <- function(data_dim = 10, sparsity = data_dim/2) {
   set.seed(10)
-  cor_mat1 <- generate_cor_mat(data_dim)
+  cor_mat1 <- rcor_mat(data_dim)
   affected_dims <- sample(1:data_dim, sparsity)
   draw_sd <- get_change_distr('sd_only', data_dim)$draw_sd
   change_cor_mat(cor_mat1, affected_dims, draw_sd = draw_sd)
@@ -55,7 +55,7 @@ benchmark_tpca <- function() {
 
 compare_tpca <- function(data_dim = 10, n_sim = 10^3) {
   set.seed(20)
-  cov_mat1 <- generate_cor_mat(data_dim, K0 = data_dim)
+  cov_mat1 <- rcor_mat(data_dim, K0 = data_dim)
   hellinger_tpca <- tpca(cov_mat1, n_sim = n_sim, change_distr = 'full_uniform')
   hellinger_est_tpca <- rowMeans(hellinger_tpca)
   
@@ -68,7 +68,7 @@ compare_tpca <- function(data_dim = 10, n_sim = 10^3) {
 compare_pca <- function(data_dim) {
   # Conclusion: Use svd when all eigenvectors/eigenvalues are needed.
   
-  cor_mat <- generate_cor_mat(data_dim)
+  cor_mat <- rcor_mat(data_dim)
   pca <- pca(cor_mat, axes = 1:(data_dim - 1))
   pca_small <- pca_small(cor_mat, data_dim - 1)
   pca_large <- pca_large(cor_mat, data_dim - 1)
@@ -81,9 +81,16 @@ compare_pca <- function(data_dim) {
 
 benchmark_RSpectra <- function(data_dim, k) {
   # Conclusion: RSpectra faster than irlba (2x for data_dim = 100 and k = 10).
-  cor_mat <- generate_cor_mat(data_dim)
+  cor_mat <- rcor_mat(data_dim)
   microbenchmark::microbenchmark(
     pca_small(cor_mat, k),
     pca_large(cor_mat, k)
   )
+}
+
+test_obs_needed <- function(data_dim, n) {
+  max(sapply(1:1000, function(i) {
+    cor_mat_est <- rcor_mat_est(data_dim, n = n)
+    obs_needed(cor_mat_est, 0.01)
+  }))
 }
