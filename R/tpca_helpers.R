@@ -59,3 +59,17 @@ which_axes <- function(prop_max, keep_prop, max_axes) {
   n_keep <- min(sum(cum_prop < keep_prop) + 1, max_axes)
   order_axes[1:n_keep]
 }
+
+obs_needed <- function(cor_mat, alpha) {
+  d <- ncol(cor_mat)
+  l <- svd(cor_mat, nv = 0, nu = 0)$d
+  # l <- l[l < 1]
+  ind <- 1:(length(l) - 1)
+  l_bar <- vapply(ind, function(i) sum(l[i:(i + 1)]) / 2, numeric(1))
+  V <- vapply(ind, function(i) (l[i] * l[i + 1]) / l_bar[i]^2, numeric(1))
+  # l_sums <- vapply(ind, function(i) sum(1 / (l[-(i:(i + 1))] - l_bar[i])^2), numeric(1))
+  c <- stats::qchisq(1 - alpha, 2)
+  # U <- - c * log(V) + d - l_bar^2 * l_sums
+  U <- - c * log(V) + d
+  max(U)
+}
