@@ -1,3 +1,4 @@
+#' @export
 pca <- function(cov_mat, axes = 1:ncol(cov_mat)) {
   eigen_obj <- svd(cov_mat, nv = 0)
   eigen_vectors <- t(eigen_obj$u[, axes])
@@ -5,11 +6,13 @@ pca <- function(cov_mat, axes = 1:ncol(cov_mat)) {
   list('vectors' = eigen_vectors, 'values' = eigen_values)
 }
 
+#' @export
 pca_small <- function(cov_mat, k) {
   eigen_obj <- RSpectra::eigs_sym(cov_mat, k = k, which = 'LM', sigma = 0)
   list('vectors' = t(eigen_obj$vectors), 'values' = eigen_obj$values)
 }
 
+#' @export
 pca_large <- function(cov_mat, k) {
   eigen_obj <- RSpectra::eigs_sym(cov_mat, k = k, which = 'LM')
   list('vectors' = t(eigen_obj$vectors), 'values' = eigen_obj$values)
@@ -30,6 +33,7 @@ which_dims_cor <- function(cov_mat) {
   (1:data_dim)[!ind_dims]
 }
 
+#' @export
 standardize_cov_mat <- function(cov_mat) {
   # Standardizes a covariance matrix to become a correlation matrix.
   if(!is_cor_mat(cov_mat)) {
