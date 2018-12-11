@@ -1,3 +1,4 @@
+#' @export
 rcor_mat <- function(d, k0 = d) {
   # K0: Sparsity level, number of correlated dimensions.
   
@@ -13,12 +14,14 @@ rcor_mat <- function(d, k0 = d) {
   Sigma
 }
 
+#' @export
 rcov_mat <- function(d, k0 = d, range_sd = c(0.2, 5)) {
   R <- rcor_mat(d, k0)
   sigma <- diag(rep(runif(d, range_sd[1], range_sd[2])))
   sigma %*% R %*% sigma
 }
 
+#' @export
 rcor_mat_est <- function(d, k0 = d, n = 2 * d) {
   # d:  data dimension
   # k0: d - k0 is the number of completely independent dimensions.

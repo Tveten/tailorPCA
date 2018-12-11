@@ -20,6 +20,7 @@ draw_change <- function(cor_mat, change_funcs, change_type, change_sparsity) {
        'cov_mat' = post_cov_mat_orig)
 }
 
+#' @export
 change_cor_mat <- function(cor_mat, affected_dims, do_nearPD = TRUE,
                            draw_cor = NULL, draw_sd = NULL) {
   # At least one of the NULL-arguments must be supplied:
