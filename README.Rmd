@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tailorPCA
+# tpca
 
 An `R` package for deciding which principal components of the data that should be kept when detection
 of changepoints in the mean vector or covariance matrix is the aim. The decision is
@@ -35,7 +35,7 @@ A reason to use tpca. Where can it be used
 From inside `R`, use the following command:
 ```{r install, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("Tveten/tailorPCA")
+devtools::install_github("Tveten/tpca")
 # library(tailorPCA)
 ```
 

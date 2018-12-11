@@ -1,10 +1,10 @@
 ---
-title: "Tutorial for 'tailorPCA'"
+title: "Tutorial for 'tpca'"
 author: "Martin Tveten"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{'Tutorial for tailorPCA'}
+  %\VignetteIndexEntry{'Tutorial for tpca'}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

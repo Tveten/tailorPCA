@@ -1,4 +1,4 @@
-Package: tailorPCA
+Package: tpca
 Type: Package
 Title: A function for tailoring PCA to change detection
 Version: 0.0.0.9001
