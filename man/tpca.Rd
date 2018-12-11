@@ -38,7 +38,9 @@ the following components:
   \item{\code{axes}}{A matrix with the chosen principal axes as rows, 
   ordered in decreasing order of sensitivity.}
   \item{\code{which_axes}}{A vector indicating which principal axes that were
-  chosen.}
+  chosen in decreasing order of sensitivity.}
+  \item{\code{prop_axes_max}}{A vector with the proportion of simulations each axis
+  was the most sensitive one.}
   \item{\code{divergence_sim}}{A matrix containing all the simulated draws 
   from the divergence metric along each principal axis. It is of dimension 
   data_dim x n_sim.}
