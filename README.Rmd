@@ -36,7 +36,7 @@ From inside `R`, use the following command:
 ```{r install, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("Tveten/tpca")
-# library(tailorPCA)
+# library(tpca)
 ```
 
 ## Description
