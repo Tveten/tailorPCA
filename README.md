@@ -1,9 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-tailorPCA
-=========
+tpca
+====
 
-An `R` package for automatically deciding which principal components to keep when detection of changepoints in the mean vector or covariance matrix is the aim. This decision is *tailored* to a chosen change distribution; the set of relevant distributional changes.
+An `R` package for deciding which principal components of the data that should be kept when detection of changepoints in the mean vector or covariance matrix is the aim. The decision is *tailored* to a chosen change distribution; a set of relevant distributional changes.
 
 Overview
 --------
@@ -19,8 +19,8 @@ From inside `R`, use the following command:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("Tveten/tailorPCA")
-# library(tailorPCA)
+devtools::install_github("Tveten/tpca")
+# library(tpca)
 ```
 
 Description
