@@ -109,7 +109,7 @@ tpca <- function(cov_mat,
   # This attributed is needed when changing correlations.
   attr(cor_mat_orig, 'which_dims_cor') <- which_dims_cor(cor_mat_orig)
   
-  pca_obj <- pca(cor_mat_orig, eigen_values = TRUE)
+  pca_obj <- pca(cor_mat_orig)
   V <- pca_obj$vectors
   pre_mean_proj <- rep(0, data_dim)
   pre_sd_proj <- sqrt(pca_obj$values)
