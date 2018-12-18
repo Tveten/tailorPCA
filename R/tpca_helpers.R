@@ -65,15 +65,16 @@ which_axes <- function(prop_max, keep_prop, max_axes) {
 }
 
 obs_needed <- function(cor_mat, alpha) {
+  llr <- function(l1, l2) {
+    log(l1) + log(l2) - 2 * log((l1 + l2) / 2) 
+  }
   d <- ncol(cor_mat)
   l <- svd(cor_mat, nv = 0, nu = 0)$d
-  # l <- l[l < 1]
-  ind <- 1:(length(l) - 1)
-  l_bar <- vapply(ind, function(i) sum(l[i:(i + 1)]) / 2, numeric(1))
-  V <- vapply(ind, function(i) (l[i] * l[i + 1]) / l_bar[i]^2, numeric(1))
-  # l_sums <- vapply(ind, function(i) sum(1 / (l[-(i:(i + 1))] - l_bar[i])^2), numeric(1))
-  c <- stats::qchisq(1 - alpha, 2)
-  # U <- - c * log(V) + d - l_bar^2 * l_sums
-  U <- - c * log(V) + d
+  l <- l[l < 1]
+  n_tests <- length(l) - 1
+  ind <- 1:n_tests
+  log_V <- vapply(ind, function(i) llr(l[i], l[i + 1]), numeric(1))
+  c <- stats::qchisq(1 - alpha / n_tests, 2)
+  U <- - c * log_V + d
   max(U)
 }
