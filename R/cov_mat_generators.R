@@ -28,5 +28,5 @@ rcor_mat_est <- function(d, k0 = d, n = 2 * d) {
   # n:  Number of observations that the estimated cor_mat is based on.
   Sigma <- rcor_mat(d, k0)
   Sigma_est <- 1 / (n - 1) * rWishart(1, n, Sigma)[, , 1]
-  standardize_cov_mat(Sigma_est)
+  structure(standardize_cov_mat(Sigma_est), 'n_obs' = n)
 }
