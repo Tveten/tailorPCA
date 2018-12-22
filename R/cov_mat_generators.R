@@ -17,7 +17,7 @@ rcor_mat <- function(d, k0 = d) {
 #' @export
 rcov_mat <- function(d, k0 = d, range_sd = c(0.2, 5)) {
   R <- rcor_mat(d, k0)
-  sigma <- diag(rep(runif(d, range_sd[1], range_sd[2])))
+  sigma <- diag(rep(runif(d, range_sd[1], range_sd[2])), nrow = d)
   sigma %*% R %*% sigma
 }
 
