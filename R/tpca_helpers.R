@@ -14,7 +14,7 @@ pca <- function(cov_mat, axes = 1:data_dim) {
 
 pca_all <- function(cov_mat, axes = 1:ncol(cov_mat)) {
   eigen_obj <- svd(cov_mat, nv = 0)
-  eigen_vectors <- t(eigen_obj$u[, axes])
+  eigen_vectors <- t(eigen_obj$u)[axes, , drop = FALSE]
   eigen_values <- eigen_obj$d[axes]
   list('vectors' = eigen_vectors, 'values' = eigen_values)
 }
@@ -24,7 +24,7 @@ pca_small <- function(cov_mat, axes) {
   k <- data_dim - min(axes) + 1
   shifted_axes <- axes - min(axes) + 1
   eigen_obj <- RSpectra::eigs_sym(cov_mat, k = k, which = 'LM', sigma = 0)
-  eigen_vectors <- t(eigen_obj$vectors)[shifted_axes, ]
+  eigen_vectors <- t(eigen_obj$vectors)[shifted_axes, , drop = FALSE]
   eigen_values <- eigen_obj$values[shifted_axes]
   list('vectors' = eigen_vectors, 'values' = eigen_values)
 }
@@ -32,7 +32,7 @@ pca_small <- function(cov_mat, axes) {
 pca_large <- function(cov_mat, axes) {
   k <- max(axes)
   eigen_obj <- RSpectra::eigs_sym(cov_mat, k = k, which = 'LM')
-  eigen_vectors <- t(eigen_obj$vectors)[axes, ]
+  eigen_vectors <- t(eigen_obj$vectors)[axes, , drop = FALSE]
   eigen_values <- eigen_obj$values[axes]
   list('vectors' = eigen_vectors, 'values' = eigen_values)
 }
