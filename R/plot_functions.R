@@ -25,12 +25,12 @@ ggplot_prop_max <- function(tpca_obj,
   data_dim <- length(prop_axes_max)
   prop_max_df <- data.frame('axes' = 1:data_dim,
                             'prop_max' = prop_axes_max)
-  ggplot(prop_max_df, aes(x = axes, y = prop_max)) +
-    geom_bar(stat = 'identity') +
-    theme_light() +
-    ggtitle(title) +
-    labs(x = xlab, y = ylab) +
-    scale_y_continuous(limits = c(0, 1))
+  ggplot2::ggplot(prop_max_df, ggplot2::aes(x = axes, y = prop_max)) +
+    ggplot2::geom_bar(stat = 'identity') +
+    ggplot2::theme_light() +
+    ggplot2::ggtitle(title) +
+    ggplot2::labs(x = xlab, y = ylab) +
+    ggplot2::scale_y_continuous(limits = c(0, 1))
 }
 
 ggplot_types_mean <- function(tpca_obj, 
@@ -46,7 +46,7 @@ ggplot_types_mean <- function(tpca_obj,
   names(type_means) <- unlist(shown_names[types])
   type_means$Overall <- rowMeans(tpca_obj$divergence_sim)
   
-  means_df <- melt(type_means, value.name = 'divergence')
+  means_df <- reshape2::melt(type_means, value.name = 'divergence')
   names(means_df)[2] <- 'type'
   ordered_levels <- c('Mean', 'Variance', 'Correlation', 'Overall')
   means_df$type <- factor(means_df$type, levels = ordered_levels)
@@ -54,17 +54,17 @@ ggplot_types_mean <- function(tpca_obj,
   
   line_sizes <- c(0.3, 0.3, 0.3, 0.6)
   line_cols <- c('#FF0000FF', '#0000FFFF', '#00FF00FF', 'black')
-  names(line_cols) <- ordered_levels
+  names(line_sizes) <- ordered_levels
   names(line_cols) <- ordered_levels
   
-  ggplot(means_df, aes(x = axis, y = divergence, color = type)) +
-    geom_line(aes(size = type)) +
-    theme_light() +
-    labs(x = xlab, y = ylab) +
-    ggtitle(title) +
-    scale_y_continuous(limits = c(0, 1)) +
-    scale_color_manual('Change \n type', values = line_cols) +
-    scale_size_manual(values = line_sizes, guide = FALSE)
+  ggplot2::ggplot(means_df, ggplot2::aes(x = axis, y = divergence, color = type)) +
+    ggplot2::geom_line(ggplot2::aes(size = type)) +
+    ggplot2::theme_light() +
+    ggplot2::labs(x = xlab, y = ylab) +
+    ggplot2::ggtitle(title) +
+    ggplot2::scale_y_continuous(limits = c(0, 1)) +
+    ggplot2::scale_color_manual('Change \n type', values = line_cols) +
+    ggplot2::scale_size_manual(values = line_sizes, guide = FALSE)
 }
 
 ggplot_sparsity_mean <- function(tpca_obj, 
@@ -88,7 +88,7 @@ ggplot_sparsity_mean <- function(tpca_obj,
   sparsity_means <- do.call('cbind', sparsity_means)
   
   colnames(sparsity_means) <- c(sparsities, max(sparsities) + 1)
-  means_df <- melt(sparsity_means, 
+  means_df <- reshape2::melt(sparsity_means, 
                    varnames   = c('axis', 'K'), 
                    value.name = 'divergence')
   means_df$K <- as.factor(means_df$K)
@@ -101,16 +101,16 @@ ggplot_sparsity_mean <- function(tpca_obj,
   col <- c(colorRampPalette(c('orange', 'blue'))(length(sparsities)), 'black')
   line_sizes <- c(rep(0.3, length(col) - 1), 0.6)
   
-  ggplot(means_df, aes(x = axis, y = divergence, color = K)) +
-    geom_line(aes(size = K)) +
-    theme_light() +
-    labs(x = xlab, y = ylab) +
-    ggtitle(title) +
-    scale_y_continuous(limits = c(0, 1)) +
-    scale_color_manual('Change \n sparsity', values = col,
+  ggplot2::ggplot(means_df, ggplot2::aes(x = axis, y = divergence, color = K)) +
+    ggplot2::geom_line(aes(size = K)) +
+    ggplot2::theme_light() +
+    ggplot2::labs(x = xlab, y = ylab) +
+    ggplot2::ggtitle(title) +
+    ggplot2::scale_y_continuous(limits = c(0, 1)) +
+    ggplot2::scale_color_manual('Change \n sparsity', values = col,
                        breaks = c(sparsities[label_ind], max(sparsities) + 1),
                        labels = legend_labels) +
-    scale_size_manual(values = line_sizes, guide = FALSE)
+    ggplot2::scale_size_manual(values = line_sizes, guide = FALSE)
 }
 
 ggplot_quantiles <- function(tpca_obj, 
@@ -125,12 +125,12 @@ ggplot_quantiles <- function(tpca_obj,
   plot_df <- data.frame('axis' = 1:data_dim,
                         'mean' = mean_divergence)
   plot_df <- cbind(plot_df, t(divergence_quantiles))
-  plot_df <- melt(plot_df, id.vars = 'axis')
-  ggplot(plot_df, aes(x = axis, y = value, linetype = variable)) +
-    geom_line() +
-    theme_light() +
-    labs(x = xlab, y = ylab) +
-    ggtitle(title) +
-    scale_linetype_manual(guide = FALSE, 
+  plot_df <- reshape2::melt(plot_df, id.vars = 'axis')
+  ggplot2::ggplot(plot_df, ggplot2::aes(x = axis, y = value, linetype = variable)) +
+    ggplot2::geom_line() +
+    ggplot2::theme_light() +
+    ggplot2::labs(x = xlab, y = ylab) +
+    ggplot2::ggtitle(title) +
+    ggplot2::scale_linetype_manual(guide = FALSE, 
                           values = c(1, rep(2, nrow(divergence_quantiles))))
 }
