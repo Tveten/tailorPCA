@@ -45,13 +45,13 @@ ggplot_types_mean <- function(tpca_obj,
   type_subsets <- lapply(types, function(type) subset_sims(tpca_obj, type = type))
   type_means <- lapply(type_subsets, rowMeans)
   
-  shown_names <- list('mean' = 'Mean', 'sd' = 'Variance', 'cor' = 'Correlation')
+  shown_names <- list('mean' = 'Mean', 'sd' = 'Var', 'cor' = 'Cor')
   names(type_means) <- unlist(shown_names[types])
-  type_means$Overall <- rowMeans(tpca_obj$divergence_sim)
+  type_means$All <- rowMeans(tpca_obj$divergence_sim)
   
   means_df <- reshape2::melt(type_means, value.name = 'divergence')
   names(means_df)[2] <- 'type'
-  ordered_levels <- c('Mean', 'Variance', 'Correlation', 'Overall')
+  ordered_levels <- c('Mean', 'Var', 'Cor', 'All')
   means_df$type <- factor(means_df$type, levels = ordered_levels)
   means_df$axis <- rep(1:data_dim, length(types) + 1)
   
@@ -101,7 +101,7 @@ ggplot_sparsity_mean <- function(tpca_obj,
   legend_labels <- vapply(sparsities[label_ind], 
                           function(x) paste('K =', x), 
                           character(1))
-  legend_labels <- c(legend_labels, 'Overall')
+  legend_labels <- c(legend_labels, 'All')
   col <- c(colorRampPalette(c('orange', 'blue'))(length(sparsities)), 'black')
   line_sizes <- c(rep(0.3, length(col) - 1), 0.6)
   
@@ -155,9 +155,9 @@ ggplot_singles <- function(tpca_obj,
     change_sparsities <- tpca_obj$change_sparsity[random_type_ind]
     # names(type_sample) <- types
     divergence_subset <- tpca_obj$divergence_sim[, random_type_ind]
-    shown_names <- list('mean' = paste0('Mean, K = ', change_sparsities[types == 'mean']),
-                        'sd' = paste0('Var, K = ', change_sparsities[types == 'sd']), 
-                        'cor' = paste0('Cor, K = ', change_sparsities[types == 'cor']))
+    shown_names <- list('mean' = paste0('Mean, \n K = ', change_sparsities[types == 'mean']),
+                        'sd' = paste0('Var, \n K = ', change_sparsities[types == 'sd']), 
+                        'cor' = paste0('Cor, \n K = ', change_sparsities[types == 'cor']))
     colnames(divergence_subset) <- unlist(shown_names[types])
     divergence_df <- reshape2::melt(divergence_subset)
     names(divergence_df) <- c('axis', 'type', 'divergence')
@@ -174,7 +174,7 @@ ggplot_singles <- function(tpca_obj,
       ggplot2::labs(x = xlab, y = ylab) +
       ggplot2::ggtitle(title) +
       ggplot2::scale_y_continuous(limits = c(0, 1)) +
-      ggplot2::scale_color_manual('Change \n type, sparsity', values = line_cols) +
+      ggplot2::scale_color_manual('Change \n type', values = line_cols) +
       ggplot2::scale_size_manual(values = line_sizes, guide = FALSE)
   } else {
     random_ind <- sample(1:n_sim, n)
