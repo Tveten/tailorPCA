@@ -1,3 +1,4 @@
+#' @export
 plot.tpca <- function(tpca_obj, ...) {
   par(ask = TRUE)
   on.exit(par(ask = FALSE))
@@ -14,6 +15,7 @@ plot.tpca <- function(tpca_obj, ...) {
   invisible(NULL)
 }
 
+#' @export
 ggplot_prop_max <- function(tpca_obj, 
                             type     = unique(tpca_obj$change_type),
                             sparsity = unique(tpca_obj$change_sparsity),
@@ -33,6 +35,7 @@ ggplot_prop_max <- function(tpca_obj,
     ggplot2::scale_y_continuous(limits = c(0, 1))
 }
 
+#' @export
 ggplot_types_mean <- function(tpca_obj, 
                               types = unique(tpca_obj$change_type),
                               title = NULL,
@@ -67,6 +70,7 @@ ggplot_types_mean <- function(tpca_obj,
     ggplot2::scale_size_manual(values = line_sizes, guide = FALSE)
 }
 
+#' @export
 ggplot_sparsity_mean <- function(tpca_obj, 
                                  sparsities = unique(tpca_obj$change_sparsity),
                                  title      = NULL,
@@ -113,6 +117,7 @@ ggplot_sparsity_mean <- function(tpca_obj,
     ggplot2::scale_size_manual(values = line_sizes, guide = FALSE)
 }
 
+#' @export
 ggplot_quantiles <- function(tpca_obj, 
                              quantiles = c(0.25, 0.975),
                              title     = NULL,
@@ -135,6 +140,7 @@ ggplot_quantiles <- function(tpca_obj,
                           values = c(1, rep(2, nrow(divergence_quantiles))))
 }
 
+#' @export
 ggplot_singles <- function(tpca_obj, 
                            n = NULL,
                            title = NULL,
