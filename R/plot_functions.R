@@ -102,7 +102,7 @@ ggplot_sparsity_mean <- function(tpca_obj,
   line_sizes <- c(rep(0.3, length(col) - 1), 0.6)
   
   ggplot2::ggplot(means_df, ggplot2::aes(x = axis, y = divergence, color = K)) +
-    ggplot2::geom_line(aes(size = K)) +
+    ggplot2::geom_line(ggplot2::aes(size = K)) +
     ggplot2::theme_light() +
     ggplot2::labs(x = xlab, y = ylab) +
     ggplot2::ggtitle(title) +
