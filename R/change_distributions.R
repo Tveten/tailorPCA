@@ -119,6 +119,17 @@ change_distr_env$full_uniform <- function(data_dim) {
                  cor_int     = c(0, 1))
 }
 
+change_distr_env$halfsparse_uniform <- function(data_dim) {
+  set_uniform_cd(data_dim,
+                 prob        = rep(1/3, 3), 
+                 sparsities  = 2:round(data_dim / 2),
+                 mean_int    = c(-1.5, 1.5), 
+                 sd_int      = c(2.5^(-1), 2.5),
+                 sd_inc_prob = 0.5,
+                 cor_int     = c(0, 1))
+}
+
+
 change_distr_env$mean_only <- function(data_dim) {
   set_uniform_cd(data_dim,
                  prob        = c(1, 0, 0), 
