@@ -176,7 +176,7 @@ ggplot_singles <- function(tpca_obj,
     divergence_subset <- tpca_obj$divergence_sim[, random_ind]
     shown_names <- lapply(1:n, function(i) {
       ind <- random_ind[i]
-      paste0(i, ' ', tpca_obj$change_type[ind], ', K = ', tpca_obj$change_sparsity[ind])
+      paste0(i, ': ', tpca_obj$change_type[ind], ', K = ', tpca_obj$change_sparsity[ind])
     })
     colnames(divergence_subset) <- unlist(shown_names)
     divergence_df <- reshape2::melt(divergence_subset)
