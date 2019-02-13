@@ -134,3 +134,60 @@ ggplot_quantiles <- function(tpca_obj,
     ggplot2::scale_linetype_manual(guide = FALSE, 
                           values = c(1, rep(2, nrow(divergence_quantiles))))
 }
+
+ggplot_singles <- function(tpca_obj, 
+                           n = NULL,
+                           title = NULL,
+                           xlab  = 'Principal axis nr.',
+                           ylab  = 'Hellinger distance') {
+  data_dim <- nrow(tpca_obj$divergence_sim)
+  n_sim <- ncol(tpca_obj$divergence_sim)
+  types = unique(tpca_obj$change_type)
+  if (is.null(n)) {
+    all_type_inds <- lapply(types, function(type) which(tpca_obj$change_type == type))
+    random_type_ind <- vapply(all_type_inds, function(ind) sample(ind, 1), numeric(1))
+    change_sparsities <- tpca_obj$change_sparsity[random_type_ind]
+    # names(type_sample) <- types
+    divergence_subset <- tpca_obj$divergence_sim[, random_type_ind]
+    shown_names <- list('mean' = paste0('Mean, K = ', change_sparsities[types == 'mean']),
+                        'sd' = paste0('Var, K = ', change_sparsities[types == 'sd']), 
+                        'cor' = paste0('Cor, K = ', change_sparsities[types == 'cor']))
+    colnames(divergence_subset) <- unlist(shown_names[types])
+    divergence_df <- reshape2::melt(divergence_subset)
+    names(divergence_df) <- c('axis', 'type', 'divergence')
+    ordered_levels <- shown_names[c('mean', 'sd', 'cor')]
+    divergence_df$type <- factor(divergence_df$type, levels = ordered_levels)
+    line_sizes <- c(0.3, 0.3, 0.3)
+    line_cols <- c('#FF0000FF', '#0000FFFF', '#00FF00FF')
+    names(line_sizes) <- ordered_levels
+    names(line_cols) <- ordered_levels
+    
+    ggplot2::ggplot(divergence_df, ggplot2::aes(x = axis, y = divergence, color = type)) +
+      ggplot2::geom_line(ggplot2::aes(size = type)) +
+      ggplot2::theme_light() +
+      ggplot2::labs(x = xlab, y = ylab) +
+      ggplot2::ggtitle(title) +
+      ggplot2::scale_y_continuous(limits = c(0, 1)) +
+      ggplot2::scale_color_manual('Change \n type, sparsity', values = line_cols) +
+      ggplot2::scale_size_manual(values = line_sizes, guide = FALSE)
+  } else {
+    random_ind <- sample(1:n_sim, n)
+    change_sparsities <- tpca_obj$change_sparsity[random_ind]
+    divergence_subset <- tpca_obj$divergence_sim[, random_ind]
+    shown_names <- lapply(1:n, function(i) {
+      ind <- random_ind[i]
+      paste0(i, ' ', tpca_obj$change_type[ind], ', K = ', tpca_obj$change_sparsity[ind])
+    })
+    colnames(divergence_subset) <- unlist(shown_names)
+    divergence_df <- reshape2::melt(divergence_subset)
+    names(divergence_df) <- c('axis', 'type', 'divergence')
+    
+    ggplot2::ggplot(divergence_df, ggplot2::aes(x = axis, y = divergence, color = type)) +
+      ggplot2::geom_line() +
+      ggplot2::theme_light() +
+      ggplot2::labs(x = xlab, y = ylab) +
+      ggplot2::ggtitle(title) +
+      ggplot2::scale_y_continuous(limits = c(0, 1)) +
+      ggplot2::guides(color = ggplot2::guide_legend(title = 'Change \n type, sparsity'))
+  }
+}
