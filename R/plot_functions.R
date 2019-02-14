@@ -84,7 +84,7 @@ ggplot_sparsity_mean <- function(tpca_obj,
                             character(1))
     legend_labels <- c(legend_labels, 'All')
     col <- c(colorRampPalette(c('orange', 'blue'))(length(sparsities)), 'black')
-    lengend_breaks <- c(sparsities[label_ind], max(sparsities) + 1)
+    legend_breaks <- c(sparsities[label_ind], max(sparsities) + 1)
     line_sizes <- c(rep(0.3, length(col) - 1), 0.6)
     list('col'           = col, 
          'legend_breaks' = legend_breaks, 
