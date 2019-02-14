@@ -40,7 +40,7 @@ ggplot_types_mean <- function(tpca_obj,
                               types = unique(tpca_obj$change_type),
                               title = NULL,
                               xlab  = 'Principal axis nr.',
-                              ylab  = 'Hellinger distance') {
+                              ylab  = 'E[ Hellinger distance ]') {
   data_dim <- nrow(tpca_obj$divergence_sim)
   type_subsets <- lapply(types, function(type) subset_sims(tpca_obj, type = type))
   type_means <- lapply(type_subsets, rowMeans)
@@ -75,13 +75,33 @@ ggplot_sparsity_mean <- function(tpca_obj,
                                  sparsities = unique(tpca_obj$change_sparsity),
                                  title      = NULL,
                                  xlab       = 'Principal axis nr.',
-                                 ylab       = 'Hellinger distance') {
-  max.sparsities <- 100
-  sparsities = sort(unique(tpca_obj$change_sparsity))
-  if (length(sparsities) > max.sparsities) {
-    ind <- round(seq(1, length(sparsities), length.out = max.sparsities))
-    sparsities <- sparsities[ind]
+                                 ylab       = 'E[ Hellinger distance ]') {
+  set_color <- function(sparsities) {
+    n_legends <- min(length(sparsities), 5)
+    label_ind <- floor(seq(1, length(sparsities), length.out = n_legends))
+    legend_labels <- vapply(sparsities[label_ind], 
+                            function(x) paste('K =', x), 
+                            character(1))
+    legend_labels <- c(legend_labels, 'All')
+    col <- c(colorRampPalette(c('orange', 'blue'))(length(sparsities)), 'black')
+    lengend_breaks <- c(sparsities[label_ind], max(sparsities) + 1)
+    line_sizes <- c(rep(0.3, length(col) - 1), 0.6)
+    list('col'           = col, 
+         'legend_breaks' = legend_breaks, 
+         'legend_labels' = legend_labels)
   }
+  
+  set_shown_sparsities <- function() {
+    max_sparsities <- 100
+    sparsities <- sort(unique(tpca_obj$change_sparsity))
+    if (length(sparsities) > max_sparsities) {
+      ind <- round(seq(1, length(sparsities), length.out = max_sparsities))
+      sparsities <- sparsities[ind]
+    }
+    sparsities
+  }
+  
+  sparsities <- set_shown_sparsities()
   
   data_dim <- nrow(tpca_obj$divergence_sim)
   sparsity_subsets <- lapply(sparsities, function(sparsity) {
@@ -90,20 +110,15 @@ ggplot_sparsity_mean <- function(tpca_obj,
   sparsity_means <- lapply(sparsity_subsets, rowMeans)
   sparsity_means[[length(sparsities) + 1]] <-  rowMeans(tpca_obj$divergence_sim)
   sparsity_means <- do.call('cbind', sparsity_means)
-  
   colnames(sparsity_means) <- c(sparsities, max(sparsities) + 1)
+  
   means_df <- reshape2::melt(sparsity_means, 
-                   varnames   = c('axis', 'K'), 
-                   value.name = 'divergence')
+                             varnames   = c('axis', 'K'), 
+                             value.name = 'divergence')
   means_df$K <- as.factor(means_df$K)
   
-  label_ind <- seq.int(1, length(sparsities), length.out = min(length(sparsities), 5))
-  legend_labels <- vapply(sparsities[label_ind], 
-                          function(x) paste('K =', x), 
-                          character(1))
-  legend_labels <- c(legend_labels, 'All')
-  col <- c(colorRampPalette(c('orange', 'blue'))(length(sparsities)), 'black')
-  line_sizes <- c(rep(0.3, length(col) - 1), 0.6)
+  col_obj <- set_color(sparsities)
+  line_sizes <- c(rep(0.3, length(col_obj$col) - 1), 0.6)
   
   ggplot2::ggplot(means_df, ggplot2::aes(x = axis, y = divergence, color = K)) +
     ggplot2::geom_line(ggplot2::aes(size = K)) +
@@ -111,9 +126,10 @@ ggplot_sparsity_mean <- function(tpca_obj,
     ggplot2::labs(x = xlab, y = ylab) +
     ggplot2::ggtitle(title) +
     ggplot2::scale_y_continuous(limits = c(0, 1)) +
-    ggplot2::scale_color_manual('Change \n sparsity', values = col,
-                       breaks = c(sparsities[label_ind], max(sparsities) + 1),
-                       labels = legend_labels) +
+    ggplot2::scale_color_manual('Change \n sparsity', 
+                                values = col_obj$col,
+                                breaks = col_obj$legend_breaks, 
+                                labels = col_obj$legend_labels) +
     ggplot2::scale_size_manual(values = line_sizes, guide = FALSE)
 }
 
