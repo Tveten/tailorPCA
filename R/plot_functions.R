@@ -20,13 +20,18 @@ ggplot_prop_max <- function(tpca_obj,
                             type     = unique(tpca_obj$change_type),
                             sparsity = unique(tpca_obj$change_sparsity),
                             title    = NULL,
-                            xlab     = 'Principal axis nr. n',
-                            ylab     = 'Proportion n is most sensitive') {
+                            xlab     = 'Projection j',
+                            ylab     = 'Probability j is most sensitive',
+                            print_p  = FALSE) {
   sims <- subset_sims(tpca_obj, type = type, sparsity = sparsity)
   prop_axes_max <- prop_axes_max(sims)
   data_dim <- length(prop_axes_max)
   prop_max_df <- data.frame('axes' = 1:data_dim,
                             'prop_max' = prop_axes_max)
+  if (print_p) {
+    print(title)
+    print(prop_max_df)
+  }
   ggplot2::ggplot(prop_max_df, ggplot2::aes(x = axes, y = prop_max)) +
     ggplot2::geom_bar(stat = 'identity') +
     ggplot2::theme_light() +
@@ -39,7 +44,7 @@ ggplot_prop_max <- function(tpca_obj,
 ggplot_types_mean <- function(tpca_obj, 
                               types = unique(tpca_obj$change_type),
                               title = NULL,
-                              xlab  = 'Principal axis nr.',
+                              xlab  = 'Projection j',
                               ylab  = 'E[ Hellinger distance ]') {
   data_dim <- nrow(tpca_obj$divergence_sim)
   type_subsets <- lapply(types, function(type) subset_sims(tpca_obj, type = type))
@@ -74,7 +79,7 @@ ggplot_types_mean <- function(tpca_obj,
 ggplot_sparsity_mean <- function(tpca_obj, 
                                  sparsities = unique(tpca_obj$change_sparsity),
                                  title      = NULL,
-                                 xlab       = 'Principal axis nr.',
+                                 xlab       = 'Projection j',
                                  ylab       = 'E[ Hellinger distance ]') {
   set_color <- function(sparsities) {
     n_legends <- min(length(sparsities), 5)
@@ -137,7 +142,7 @@ ggplot_sparsity_mean <- function(tpca_obj,
 ggplot_quantiles <- function(tpca_obj, 
                              quantiles = c(0.25, 0.975),
                              title     = NULL,
-                             xlab      = 'Principal axis nr.',
+                             xlab      = 'Projection j',
                              ylab      = 'Hellinger distance') {
   divergence_sims <- tpca_obj$divergence_sim
   data_dim <- nrow(divergence_sims)
@@ -160,7 +165,7 @@ ggplot_quantiles <- function(tpca_obj,
 ggplot_singles <- function(tpca_obj, 
                            n = NULL,
                            title = NULL,
-                           xlab  = 'Principal axis nr.',
+                           xlab  = 'Projection j',
                            ylab  = 'Hellinger distance') {
   data_dim <- nrow(tpca_obj$divergence_sim)
   n_sim <- ncol(tpca_obj$divergence_sim)
