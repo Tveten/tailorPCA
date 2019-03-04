@@ -56,12 +56,13 @@
 #' 
 #' @export
 set_uniform_cd <- function(data_dim,
-                           prob        = rep(1/3, 3), 
-                           sparsities  = 2:data_dim,
-                           mean_int    = c(-1.5, 1.5), 
-                           sd_int      = c(2.5^(-1), 2.5), 
-                           sd_inc_prob = 0.5,
-                           cor_int     = c(0, 1)) {
+                           prob         = rep(1/3, 3), 
+                           sparsities   = 2:data_dim,
+                           mean_int     = c(-1.5, 1.5), 
+                           sd_int       = c(2.5^(-1), 2.5), 
+                           sd_inc_prob  = 0.5,
+                           cor_int      = c(0, 1),
+                           change_equal = FALSE) {
   
   ## ERROR HANDLING ------------------------------------------------------------
   assert_class_length_noNA(data_dim, is.numeric, 1)
@@ -95,15 +96,27 @@ set_uniform_cd <- function(data_dim,
                         sample(change_types, n_sim, prob = prob, replace = TRUE)
                       },
   'draw_sparsities' = function(n_sim) sample(sparsities, n_sim, replace = TRUE),
-  'draw_dims'       = function(k) sample(1:data_dim, k),
-  'draw_mean'       = function(k) runif(k, mean_int[1], mean_int[2]),
-  'draw_sd'         = function(k) {
-                        sd_increases <- runif(round(sd_inc_prob * k), 1, sd_int[2])
-                        sd_decreases <- runif(k - length(sd_increases), sd_int[1], 1)
-                        sample(c(sd_increases, sd_decreases), k)
-                      },
-  'draw_cor'        = function(k) runif(k, cor_int[1], cor_int[2])
+  'draw_dims'       = function(k) sample(1:data_dim, k)
   )
+  if (change_equal) {
+    return_list$draw_mean <- function(k) rep(runif(1, mean_int[1], mean_int[2]), k)
+    return_list$draw_sd <- function(k) {
+      sd_increase <- runif(1, 1, sd_int[2])
+      sd_decrease <- runif(1, sd_int[1], 1)
+      sd_change <- sample(c(sd_increase, sd_decrease), 
+                          prob = c(sd_inc_prob, 1 - sd_inc_prob), 1)
+      rep(sd_change, k)
+    }
+    return_list$draw_cor <- function(k) rep(runif(1, cor_int[1], cor_int[2]), k)
+  } else {
+    return_list$draw_mean <- function(k) runif(k, mean_int[1], mean_int[2])
+    return_list$draw_sd <- function(k) {
+      sd_increases <- runif(round(sd_inc_prob * k), 1, sd_int[2])
+      sd_decreases <- runif(k - length(sd_increases), sd_int[1], 1)
+      sample(c(sd_increases, sd_decreases), k)
+    }
+    return_list$draw_cor <- function(k) runif(k, cor_int[1], cor_int[2])
+  }
   structure(return_list, class = 'change_distr')
 }
 
@@ -119,7 +132,39 @@ change_distr_env$full_uniform <- function(data_dim) {
                  cor_int     = c(0, 1))
 }
 
-change_distr_env$halfsparse_uniform <- function(data_dim) {
+change_distr_env$full_uniform_equal <- function(data_dim) {
+  set_uniform_cd(data_dim,
+                 prob         = rep(1/3, 3), 
+                 sparsities   = 2:data_dim,
+                 mean_int     = c(-1.5, 1.5), 
+                 sd_int       = c(2.5^(-1), 2.5),
+                 sd_inc_prob  = 0.5,
+                 cor_int      = c(0, 1),
+                 change_equal = TRUE)
+}
+
+change_distr_env$full_uniform_large <- function(data_dim) {
+  set_uniform_cd(data_dim,
+                 prob         = rep(1/3, 3), 
+                 sparsities   = 2:data_dim,
+                 mean_int     = c(-3, 3), 
+                 sd_int       = c(4^(-1), 4),
+                 sd_inc_prob  = 0.5,
+                 cor_int      = c(0, 0.5))
+}
+
+change_distr_env$full_uniform_small <- function(data_dim) {
+  set_uniform_cd(data_dim,
+                 prob         = rep(1/3, 3), 
+                 sparsities   = 2:data_dim,
+                 mean_int     = c(-0.5, 5), 
+                 sd_int       = c(1.5^(-1), 1.5),
+                 sd_inc_prob  = 0.5,
+                 cor_int      = c(0.5, 1))
+}
+
+
+change_distr_env$semisparse_uniform <- function(data_dim) {
   set_uniform_cd(data_dim,
                  prob        = rep(1/3, 3), 
                  sparsities  = 2:round(data_dim / 2),
