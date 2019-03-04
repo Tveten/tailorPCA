@@ -53,12 +53,18 @@ run_avg_hellinger_sim <- function() {
   Map(run_sim, k0s, cov_mat_types)
 }
 
-get_avg_figure <- function(cov_mat_type, show = FALSE) {
+get_avg_figure <- function(cov_mat_type, title = FALSE, show = FALSE) {
+  get_title <- function(cov_mat_type) {
+    if (cov_mat_type == 'halfsparse') return('Half-sparse')
+    else return(first_up(cov_mat_type))
+  }
+  
   dir <- './examples/'
   # Always returns object named tpca_list.
   load(paste0(dir, 'tpca_list_', cov_mat_type, '.RData'))
   tpca_obj <- merge_tpca_list(tpca_list)
-  type_plot <- ggplot_types_mean(tpca_obj)
+  if (title) type_plot <- ggplot_types_mean(tpca_obj, title = title_str)
+  else type_plot <- ggplot_types_mean(tpca_obj)
   sparsity_plot <- ggplot_sparsity_mean(tpca_obj)
   
   if (show) gridExtra::grid.arrange(type_plot, sparsity_plot, nrow = 2)
@@ -75,6 +81,19 @@ avg_tpca_figure <- function() {
                          nrow = 2)
 }
 
+avg_tpca_figure_dense <- function() {
+  figures <- get_avg_figure('dense')
+  gridExtra::arrangeGrob(figures$type, figures$sparsity, nrow = 1)
+}
+
+save_avg_figure_dense <- function() {
+  figure <- avg_tpca_figure_dense()
+  name <- 'avg_hellinger_dense-d100'
+  save_figure(figure, name)
+}
+
 save_avg_figure <- function() {
-  save_figure(avg_tpca_figure(), 'avg_hellinger-d100')
+  figure <- avg_tpca_figure()
+  name <- 'avg_hellinger-d100'
+  save_figure(figure, name)
 }

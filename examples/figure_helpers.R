@@ -1,9 +1,12 @@
-save_figure <- function(ggplot_obj, name, extension = 'png') {
+save_figure <- function(ggplot_obj, name, 
+                        base_width  = NULL, 
+                        base_height = NULL, 
+                        extension = 'png') {
   plot_grid <- dim(ggplot_obj)
   A4_width <- 8.27  # inches
   A4_height <- 11.69  # inches
-  base_width <- 2.88
-  base_height <- 2.3
+  if (is.null(base_width)) base_width <- 2.88
+  if (is.null(base_height)) base_height <- 2.3
   if (is.null(plot_grid)) {
     width = base_width
     height = base_height
@@ -11,8 +14,8 @@ save_figure <- function(ggplot_obj, name, extension = 'png') {
     width = plot_grid[2] * base_width
     height = plot_grid[1] * base_height
   }
-  dir <- '/mn/sarpanitu/ansatte-u6/martintv/Documents/tpca paper/Text/Fig'
-  ggplot2::ggsave(paste0(dir, '/', name, '.', extension), ggplot_obj,
+  dir <- '/mn/sarpanitu/ansatte-u6/martintv/Documents/tpca paper/Text/Fig/'
+  ggplot2::ggsave(paste0(dir, name, '.', extension), ggplot_obj,
                   width = width, height = height, units = 'in')
 }
 
@@ -30,4 +33,9 @@ merge_tpca_list <- function(tpca_list) {
   tpca_obj$change_type <- do.call('c', type_list)
   tpca_obj$change_sparsity <- do.call('c', sparsity_list)
   tpca_obj
+}
+
+first_up <- function(x) {
+  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+  x
 }
