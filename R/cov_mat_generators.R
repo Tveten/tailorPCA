@@ -1,10 +1,10 @@
 #' @export
-rcor_mat <- function(d, k0 = d) {
+rcor_mat <- function(d, k0 = d, alphad = 1) {
   # K0: Sparsity level, number of correlated dimensions.
   
   if (k0 == 0) return(diag(rep(1, d)))
   
-  Sigma <- clusterGeneration::rcorrmatrix(k0)
+  Sigma <- clusterGeneration::rcorrmatrix(k0, alphad = alphad)
   if (k0 != d) {
     identity.mat <- diag(rep(1, d - k0))
     zero.mat <- matrix(0, ncol = d - k0, nrow = k0)
