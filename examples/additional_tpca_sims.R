@@ -65,20 +65,47 @@ run_all_additional_sims <- function() {
   run_Hsim_uniform_D200()
 }
 
-get_avg_figure <- function(change_distr, title = FALSE, show = FALSE) {
-  get_title <- function(cov_mat_type) {
-    if (cov_mat_type == 'halfsparse') return('Half-sparse')
-    else return(first_up(cov_mat_type))
+get_avg_figure <- function(tpca_obj, title = FALSE, show = FALSE) {
+  get_title <- function(file_id) {
+    file_id
   }
   
-  dir <- './examples/'
-  # Always returns object named tpca_list.
-  load(paste0(dir, 'tpca_list_', cov_mat_type, '.RData'))
-  tpca_obj <- merge_tpca_list(tpca_list)
-  if (title) type_plot <- ggplot_types_mean(tpca_obj, title = title_str)
+  if (title) type_plot <- ggplot_types_mean(tpca_obj, title = get_title())
   else type_plot <- ggplot_types_mean(tpca_obj)
   sparsity_plot <- ggplot_sparsity_mean(tpca_obj)
   
-  if (show) gridExtra::grid.arrange(type_plot, sparsity_plot, nrow = 2)
+  if (show) show(gridExtra::grid.arrange(type_plot, sparsity_plot, nrow = 1))
   list('type' = type_plot, 'sparsity' = sparsity_plot)
+}
+
+get_prop_figure <- function(tpca_obj, show = FALSE) {
+  prop_plot <- ggplot_prop_max(tpca_obj)
+  
+  if (show) show(prop_plot)
+  prop_plot
+}
+
+
+tpca_summary_figure <- function(file_id, show = FALSE) {
+  dir <- './examples/'
+  # Always loads object named tpca_list.
+  load(paste0(dir, 'tpca_list_', file_id, '.RData'))
+  tpca_obj <- merge_tpca_list(tpca_list)
+  avg_figures <- get_avg_figure(tpca_obj)
+  prop_figure <- get_prop_figure(tpca_obj)
+  
+  if (show) show(gridExtra::grid.arrange(avg_figures$type, avg_figures$sparsity, prop_figure, nrow = 1))
+  invisible(gridExtra::arrangeGrob(avg_figures$type, avg_figures$sparsity, prop_figure, nrow = 1))
+}
+
+save_summary_figure <- function(file_id) {
+  figure <- tpca_summary_figure(file_id)
+  file_name <- paste0('hellinger_summary_', file_id)
+  save_figure(figure, file_name)
+}
+
+save_all_additional_figures <- function() {
+ file_ids <- c('full_uniform_equal_D100', 'full_uniform_large_D100', 
+               'full_uniform_small_D100', 'full_uniform_D200') 
+  invisible(lapply(file_ids, save_summary_figure))
 }
