@@ -87,7 +87,7 @@ is_cor_mat <- function(cov_mat) {
   isTRUE(all.equal(diag(cov_mat), rep(1, ncol(cov_mat))))
 }
 
-is_positive_definite <- function(cov_mat, tol = 1e-8) {
+is_positive_definite <- function(cov_mat, tol = 1e-12) {
   eigen_values <- eigen(cov_mat, symmetric = TRUE, only.values = TRUE)$values
   all(eigen_values >= tol)
 }
