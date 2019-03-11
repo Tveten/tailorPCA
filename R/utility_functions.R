@@ -8,7 +8,7 @@ assert_cov_mat <- function(cov_mat) {
   assertthat::assert_that(class(cov_mat) == 'matrix', msg = matrix_msg)
   symmetric_msg <- paste0(cov_mat_name, ' is not a symmetric matrix.')
   assertthat::assert_that(isSymmetric(cov_mat), msg = symmetric_msg)
-  posdef_msg <- paste0(cov_mat_name, ' is not a positive definite matrix (some eigenvalues are < 1e-8).')
+  posdef_msg <- paste0(cov_mat_name, ' is not a positive definite matrix (some eigenvalues are < 1e-16).')
   assertthat::assert_that(is_positive_definite(cov_mat), msg = posdef_msg)
 }
 
@@ -87,8 +87,9 @@ is_cor_mat <- function(cov_mat) {
   isTRUE(all.equal(diag(cov_mat), rep(1, ncol(cov_mat))))
 }
 
-is_positive_definite <- function(cov_mat, tol = 1e-12) {
+is_positive_definite <- function(cov_mat, tol = .Machine$double.eps) {
   eigen_values <- eigen(cov_mat, symmetric = TRUE, only.values = TRUE)$values
+  print(tail(eigen_values))
   all(eigen_values >= tol)
 }
 
