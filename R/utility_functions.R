@@ -89,7 +89,6 @@ is_cor_mat <- function(cov_mat) {
 
 is_positive_definite <- function(cov_mat, tol = .Machine$double.eps) {
   eigen_values <- eigen(cov_mat, symmetric = TRUE, only.values = TRUE)$values
-  print(tail(eigen_values))
   all(eigen_values >= tol)
 }
 
