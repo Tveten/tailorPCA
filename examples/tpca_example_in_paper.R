@@ -15,13 +15,13 @@ p_cor_greater_than <- function(a, cor_mat) {
 
 example_tpca_figure <- function(show = FALSE) {
   cor_mat <- get_example_cor_mat()
-  tpca_obj <- tpca(cor_mat, 'halfsparse_uniform', n_sim = 10^4)
-  singles_plot <- ggplot_singles(tpca_obj, title = '(a)')
-  type_plot <- ggplot_types_mean(tpca_obj, title = '(b)')
-  sparsity_plot <- ggplot_sparsity_mean(tpca_obj, title = '(c)')
+  tpca_obj <- tpca(cor_mat, 'semisparse_uniform', n_sim = 10^4)
+  type_plot <- ggplot_types_mean(tpca_obj, title = '(a)')
+  sparsity_plot <- ggplot_sparsity_mean(tpca_obj, title = '(b)')
+  singles_plot <- ggplot_singles(tpca_obj, title = '(c)')
   
-  if (show) gridExtra::grid.arrange(singles_plot, type_plot, sparsity_plot, nrow = 1)
-  gridExtra::arrangeGrob(singles_plot, type_plot, sparsity_plot, nrow = 1)
+  if (show) gridExtra::grid.arrange(type_plot, sparsity_plot, singles_plot, nrow = 1)
+  gridExtra::arrangeGrob(type_plot, sparsity_plot, singles_plot, nrow = 1)
 }
 
 save_example_figure <- function() {
