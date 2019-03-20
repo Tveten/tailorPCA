@@ -10,7 +10,7 @@ p_cor_greater_than <- function(a, cor_mat) {
   d <- ncol(cor_mat)
   correlations <- cor_mat - diag(rep(1, d))
   n_correlations <- sum(correlations != 0)
-  sum(correlations >= a) / n_correlations
+  sum(abs(correlations) >= a) / n_correlations
 }
 
 example_tpca_figure <- function(show = FALSE) {
