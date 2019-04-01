@@ -42,6 +42,61 @@ test_change_sd <- function(data_dim = 10, sparsity = data_dim/2) {
   change_cor_mat(cor_mat1, affected_dims, draw_sd = draw_sd)
 }
 
+test_duplicate_diag_block <- function() {
+  cov_mat <- matrix(1:16, nrow = 4, ncol = 4)
+  block_dim <- 2
+  duplicate_diag_block(cov_mat, block_dim)
+}
+
+test_change_cormat_tdpca <- function(unlagged_dim = 2, change_type = 'sd') {
+  # set.seed(10)
+  lag <- 1
+  data_dim <- (lag + 1) * unlagged_dim
+  cor_mat <- rcor_mat(unlagged_dim)
+  x <- gen_norm_data(3 * data_dim, rep(0, unlagged_dim), cor_mat)
+  x_lagged <- lag_extend(x, lag)
+  cor_mat_lagged <- 1 / (ncol(x_lagged) - 1) * x_lagged %*% t(x_lagged)
+  cor_mat_lagged <- standardize_cov_mat(cor_mat_lagged)
+  change_sparsity <- 2
+  affected_dims <- sample(1:unlagged_dim, change_sparsity)
+  print(affected_dims)
+  if (change_type == 'sd') {
+    draw_sd <- get_change_distr('sd_only', unlagged_dim)$draw_sd
+    post_cor_mat <- change_cor_mat_tdpca(cor_mat_lagged, lag, affected_dims, draw_sd = draw_sd)
+  } else if (change_type == 'cor') {
+    draw_cor <- get_change_distr('cor_only', unlagged_dim)$draw_cor
+    post_cor_mat <- change_cor_mat_tdpca(cor_mat_lagged, lag, affected_dims, draw_cor = draw_cor)
+  }
+  # print(cor_mat_lagged)
+  # print(post_cor_mat)
+  post_cor_mat / cor_mat_lagged
+}
+
+test_tdpca <- function(unlagged_dim = 3, n_sim = 10^2, change_distr = 'full_uniform') {
+  lag <- 3
+  data_dim <- (lag + 1) * unlagged_dim
+  cor_mat <- rcor_mat(unlagged_dim)
+  x <- gen_norm_data(3 * data_dim, rep(0, unlagged_dim), cor_mat)
+  x_lagged <- lag_extend(x, lag)
+  cor_mat_lagged <- 1 / (ncol(x_lagged) - 1) * x_lagged %*% t(x_lagged)
+  eigen(cor_mat_lagged)
+  tdpca_obj <- tdpca(cor_mat_lagged, lag = lag, n_sim = n_sim, change_distr = change_distr)
+  tdpca_obj$prop_axes_max
+}
+
+gen_norm_data <- function(n, mu, Sigma) {
+  t(MASS::mvrnorm(n, mu = mu, Sigma = Sigma))
+}
+
+lag_extend <- function(x, lag) {
+  # Matrix: (x_{t - lag}, ...,  x_{t})^T, I.e., time t is in the lower rows.
+  n <- ncol(x)
+  p <- nrow(x)
+  x_extended <- matrix(0, nrow = p * (lag + 1), ncol = n - lag)
+  vapply((lag + 1):n, function(i) as.vector(x[, (i - lag):i]),
+         numeric(p * (lag + 1)))
+}
+
 benchmark_change_func <- function() {
   microbenchmark(
     test_change_sd(100),
