@@ -58,14 +58,9 @@ change_cor_mat_tdpca <- function(cor_mat, lag, affected_dims, do_nearPD = TRUE,
   change_cor <- function(cor_mat, lag, draw_cor, sparsity) {
     if (length(affected_dims) < 2)
       stop('For changes in correlation, the number of affected dimensions must be >= 2')
-    if (ncol(cor_mat) > 200)
-      stop('The current implementation for changes in correlation is too slow for dimensions > 200')
+    if (ncol(cor_mat) > 250)
+      stop('The current implementation for changes in correlation is too slow for dimensions > 250')
     
-    # cor_dims <- attr(cor_mat, 'which_dims_cor')
-    # cor_mat_sparsity <- length(cor_dims)
-    # if (cor_mat_sparsity < data_dim) {
-    #   affected_dims <- sample(cor_dims, min(sparsity, cor_mat_sparsity))
-    # }
     ind <- t(utils::combn(affected_dims, 2))
     change_factor <- draw_cor(nrow(ind))
     
