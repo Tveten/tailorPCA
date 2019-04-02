@@ -108,6 +108,8 @@ tpca <- function(cov_mat,
   
   # This attribute is needed when changing correlations in case some dims ar ind.
   attr(cor_mat_orig, 'which_dims_cor') <- which_dims_cor(cor_mat_orig)
+  if (ncol(cor_mat_orig) > 200)
+    warning('The current implementation for changes in correlation is very slow for dimensions > 200')
   
   pca_obj <- pca(cor_mat_orig)
   V <- pca_obj$vectors

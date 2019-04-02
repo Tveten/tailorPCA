@@ -31,8 +31,6 @@ change_cor_mat <- function(cor_mat, affected_dims, do_nearPD = TRUE,
   change_cor <- function(cor_mat, draw_cor, sparsity) {
     if (length(affected_dims) < 2)
       stop('For changes in correlation, the number of affected dimensions must be >= 2')
-    if (ncol(cor_mat) > 200)
-      stop('The current implementation for changes in correlation is too slow for dimensions > 200')
     
     cor_dims <- attr(cor_mat, 'which_dims_cor')
     cor_mat_sparsity <- length(cor_dims)

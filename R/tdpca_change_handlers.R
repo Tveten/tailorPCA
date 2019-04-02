@@ -58,8 +58,6 @@ change_cor_mat_tdpca <- function(cor_mat, lag, affected_dims, do_nearPD = TRUE,
   change_cor <- function(cor_mat, lag, draw_cor, sparsity) {
     if (length(affected_dims) < 2)
       stop('For changes in correlation, the number of affected dimensions must be >= 2')
-    if (ncol(cor_mat) > 250)
-      stop('The current implementation for changes in correlation is too slow for dimensions > 250')
     
     ind <- t(utils::combn(affected_dims, 2))
     change_factor <- draw_cor(nrow(ind))
@@ -107,17 +105,4 @@ change_cor_mat_tdpca <- function(cor_mat, lag, affected_dims, do_nearPD = TRUE,
   }
   
   post_cov_mat
-}
-
-duplicate_diag_block <- function(cov_mat, block_dim) {
-  data_dim <- ncol(cov_mat)
-  n_blocks <- data_dim / block_dim
-  assert_natural_number(n_blocks)
-  block_to_duplicate <- cov_mat[1:block_dim, 1:block_dim]
-  adjusted_cov_mat <- cov_mat
-  for (i in 2:n_blocks) {
-    ind <- ((i - 1) * block_dim + 1):((i - 1) * block_dim + block_dim)
-    adjusted_cov_mat[ind, ind] <- block_to_duplicate
-  }
-  adjusted_cov_mat
 }
