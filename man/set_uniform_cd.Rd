@@ -6,7 +6,7 @@
 \usage{
 set_uniform_cd(data_dim, prob = rep(1/3, 3), sparsities = 2:data_dim,
   mean_int = c(-1.5, 1.5), sd_int = c(2.5^(-1), 2.5),
-  sd_inc_prob = 0.5, cor_int = c(0, 1))
+  sd_inc_prob = 0.5, cor_int = c(0, 1), change_equal = FALSE)
 }
 \arguments{
 \item{data_dim}{An integer specifying the dimension of the data.}
