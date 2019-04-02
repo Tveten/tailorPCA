@@ -27,7 +27,7 @@ change_cor_mat <- function(cor_mat, affected_dims, do_nearPD = TRUE,
   #   functions draw_cor or draw_sigma
   #
   # Returns:
-  #   Sigma2: The change covariance matrix.
+  #   Sigma2: The changed covariance matrix.
   change_cor <- function(cor_mat, draw_cor, sparsity) {
     if (length(affected_dims) < 2)
       stop('For changes in correlation, the number of affected dimensions must be >= 2')

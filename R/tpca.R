@@ -99,14 +99,14 @@ tpca <- function(cov_mat,
   
   divergence_func <- get_divergence(divergence)
   
+  ## MAIN ----------------------------------------------------------------------
+  # All changes are assumed to happen to standardized data.
   data_dim <- ncol(cov_mat)
   change_funcs <- get_change_distr(change_distr, data_dim)
   
-  ## MAIN ----------------------------------------------------------------------
-  # All changes are assumed to happen to standardized data.
   cor_mat_orig <- standardize_cov_mat(cov_mat)
   
-  # This attributed is needed when changing correlations.
+  # This attribute is needed when changing correlations in case some dims ar ind.
   attr(cor_mat_orig, 'which_dims_cor') <- which_dims_cor(cor_mat_orig)
   
   pca_obj <- pca(cor_mat_orig)
