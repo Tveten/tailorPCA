@@ -1,44 +1,17 @@
 #' Tailors the choice of principal components for change detection with lagged variables
 #'
 #' \code{tdpca} tailors the choice of principal components to keep when detection
-#' of changepoints in the mean vector or covariance matrix is the aim. The
-#' choice of principal axes to project data onto is based on a normal state
-#' covariance matrix and a distribution over relevant change scenarios.
+#' of changepoints in the mean vector or covariance matrix is the aim.
+#' It extends \code{\link{tpca}} by allowing the input to be a covariance matrix 
+#' of a Hankel matrix (a data matrix with lagged variables stacked on top of 
+#' eachother), and thus incorporate time dynamics.
+#' Note that the dimension for the change distribution is the dimension of
+#' the data without lagged variables.
+#' See the documentation for \code{\link{tpca}} for more information.
 #'
-#' This method is based on simulating changes to a distribution, followed by 
-#' measuring the principal axes' sensitivity to each change by a statistical 
-#' divergence. The most sensitive axis is recorded in each simulated change to 
-#' estimate the probability of an axis being the most sensitive one over the
-#' range of changes specified by a change distribution. 
-#' 
-#' Custom change distributions can be built by using the function 
-#' \code{\link{set_uniform_cd}}. All components of the distribution are uniform,
-#' but the probability/importance of each type of change can be specified, along
-#' with the sparsity of the change, and all the sizes and directions of the 
-#' changes. In each simulation run, after a change sparsity has been drawn,
-#' which dimensions that are affected by a change is always randomized.
-#' The more information about which changes that are of interest, the better and
-#' less general the choice of axes will be.
-#' 
-#' Built in choices for change distributions are implemented as calls to
-#' \code{\link{set_uniform_cd}}:
-#' \describe{
-#'   \item{"full_uniform" (default)}{\code{set_uniform_cd(data_dim, 
-#'                                              prob        = rep(1/3, 3), 
-#'                                              sparsities  = 2:data_dim,
-#'                                              mean_int    = c(-1.5, 1.5), 
-#'                                              sd_int      = c(2.5^(-1), 2.5),
-#'                                              sd_inc_prob = 0.5,
-#'                                              cor_int     = c(0, 1))}}
-#'   \item{"mean_only"}{\code{set_uniform_cd(data_dim, prob = c(1, 0, 0))}}
-#'   \item{"sd_only"}{\code{set_uniform_cd(data_dim, prob = c(0, 1, 0))}}
-#'   \item{"cor_only"}{\code{set_uniform_cd(data_dim, prob = c(0, 0, 1))}}
-#' }
-#' 
-#' See the references for more information.
-#'
-#' @param cov_mat A covariance matrix, i.e., a numeric matrix that is positive
+#' @param cov_mat A covariance matrix of lagged variables. Must be positive
 #'   definite.
+#' @param lag The number of lags used.
 #' @param change_distr A string or a change distribution object. A string can be
 #'   used to choose among a set of already implemented distributions:
 #'   'full_uniform', 'mean_only', 'sd_only', 'cor_only'. Custom change
