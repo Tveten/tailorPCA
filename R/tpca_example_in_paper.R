@@ -1,5 +1,4 @@
-library(tpca)
-
+#' @export
 get_example_cor_mat <- function() {
   d <- 20
   set.seed(7)
@@ -25,16 +24,16 @@ example_tpca_figure <- function(show = FALSE) {
 }
 
 save_example_figure <- function() {
-  save_figure(example_tpca_figure(), 'ex_hellinger-d20-3')
+  save_figure(example_tpca_figure(), 'ex_hellinger-d20')
 }
 
 example_prop_tpca_figure <- function(show = FALSE) {
   cor_mat <- get_example_cor_mat()
-  tpca_obj <- tpca(cor_mat, 'halfsparse_uniform', n_sim = 10^4)
-  overall_plot <- ggplot_prop_max(tpca_obj, title = 'Overall', print_p = TRUE)
-  mean_plot <- ggplot_prop_max(tpca_obj, 'mean', title = 'Mean', print_p = TRUE)
-  sd_plot <- ggplot_prop_max(tpca_obj, 'sd', title = 'Variance', print_p = TRUE)
-  cor_plot <- ggplot_prop_max(tpca_obj, 'cor', title = 'Correlation', print_p = TRUE)
+  tpca_obj <- tpca(cor_mat, 'semisparse_uniform', n_sim = 10^4)
+  overall_plot <- ggplot_prop_max(tpca_obj, title = 'Overall')
+  mean_plot <- ggplot_prop_max(tpca_obj, 'mean', title = 'Mean')
+  sd_plot <- ggplot_prop_max(tpca_obj, 'sd', title = 'Variance')
+  cor_plot <- ggplot_prop_max(tpca_obj, 'cor', title = 'Correlation')
   
   if (show) gridExtra::grid.arrange(overall_plot, mean_plot, sd_plot, cor_plot, nrow = 1)
   invisible(gridExtra::arrangeGrob(overall_plot, mean_plot, sd_plot, cor_plot, nrow = 1))
@@ -44,4 +43,20 @@ save_example_prop_figure <- function() {
   figure <- example_prop_tpca_figure()
   name <- 'ex_hellinger_prop-d20'
   save_figure(figure, name, base_width = 2.16, base_height = 2.6)
+}
+
+#' Reproduces the figures in Section 2
+#' 
+#' This function does the following:
+#' 1) Runs the tpca-algorithm on the randomly drawn correlation 
+#' matrix with 10^4 change simulations. 
+#' (Call \code{get_example_cor_mat()} to get the correlation matrix.)
+#' 2) Creates ggplot objects for the sensitivity results and arranges them.
+#' 3) Saves two files to your current directory: ex_hellinger-d20.png and
+#' ex_hellinger_prop-d20.png.
+#' 
+#' @export
+reproduce_tpca_example <- function() {
+  save_example_figure()
+  save_example_prop_figure()
 }

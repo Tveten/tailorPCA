@@ -5,9 +5,7 @@
 #   * Show variance, quantile plots.
 #   * All affected streams changes by the same size.
 
-library(doParallel)
-
-avg_hellinger_sim2 <- function(d, n_cov_mat, n_sim, change_distr) {
+avg_hellinger_sim <- function(d, n_cov_mat, n_sim, change_distr) {
   init_log_file <- function() {
     write('+++++++++++++++++++++++++++++++++++++++++++++', 
           file = log_file, append = TRUE)
@@ -23,6 +21,7 @@ avg_hellinger_sim2 <- function(d, n_cov_mat, n_sim, change_distr) {
           file = log_file, append = TRUE)
   }
   
+  dir.create('examples', showWarnings = FALSE)
   dir <- './examples/'
   log_file <- paste0(dir, 'avg_hellinger_log_file.txt')
   init_log_file()
@@ -45,10 +44,11 @@ run_Hsim_other_cd <- function() {
     d <- 100
     n_cov_mat <- 10^3
     n_sim <- 10^3
-    avg_hellinger_sim2(d, n_cov_mat, n_sim, change_distr)
+    avg_hellinger_sim(d, n_cov_mat, n_sim, change_distr)
   }
   
-  change_distr <- c('full_uniform_equal', 'full_uniform_large', 'full_uniform_small')
+  change_distr <- c('full_uniform', 'full_uniform_equal', 
+                    'full_uniform_large', 'full_uniform_small')
   lapply(change_distr, run_sim)
 }
 
@@ -57,7 +57,7 @@ run_Hsim_uniform_D200 <- function() {
   n_cov_mat <- 10^3
   n_sim <- 10^3
   change_distr <- 'full_uniform'
-  avg_hellinger_sim2(d, n_cov_mat, n_sim, change_distr)
+  avg_hellinger_sim(d, n_cov_mat, n_sim, change_distr)
 }
 
 run_all_additional_sims <- function() {
