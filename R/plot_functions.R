@@ -65,7 +65,7 @@ ggplot_types <- function(tpca_obj,
   names(line_sizes) <- ordered_levels
   names(line_cols) <- ordered_levels
   xlab <- 'Projection j'
-  ylab <- get_ylab(tpca$divergence)
+  ylab <- paste0('E[ ', get_ylab(tpca_obj$divergence), ' ]')
   
   ggplot2::ggplot(means_df, ggplot2::aes(x = axis, y = divergence, color = type)) +
     ggplot2::geom_line(ggplot2::aes(size = type)) +
@@ -125,7 +125,7 @@ ggplot_sparsities <- function(tpca_obj,
   col_obj <- set_color(sparsities)
   line_sizes <- c(rep(0.3, length(col_obj$col) - 1), 0.6)
   xlab <- 'Projection j'
-  ylab <- get_ylab(tpca$divergence)
+  ylab <- paste0('E[ ', get_ylab(tpca_obj$divergence), ' ]')
   
   ggplot2::ggplot(means_df, ggplot2::aes(x = axis, y = divergence, color = K)) +
     ggplot2::geom_line(ggplot2::aes(size = K)) +
@@ -154,7 +154,7 @@ ggplot_quantiles <- function(tpca_obj,
   plot_df <- reshape2::melt(plot_df, id.vars = 'axis')
   
   xlab <- 'Projection j'
-  ylab <- get_ylab(tpca$divergence)
+  ylab <- get_ylab(tpca_obj$divergence)
   
   ggplot2::ggplot(plot_df, ggplot2::aes(x = axis, y = value, linetype = variable)) +
     ggplot2::geom_line() +
@@ -191,7 +191,7 @@ ggplot_singles <- function(tpca_obj,
     names(line_sizes) <- ordered_levels
     names(line_cols) <- ordered_levels
     xlab <- 'Projection j'
-    ylab <- get_ylab(tpca$divergence)
+    ylab <- get_ylab(tpca_obj$divergence)
     
     ggplot2::ggplot(divergence_df, ggplot2::aes(x = axis, y = divergence, color = type)) +
       ggplot2::geom_line(ggplot2::aes(size = type)) +
