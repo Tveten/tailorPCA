@@ -22,7 +22,6 @@ save_figure <- function(ggplot_obj, name,
     width = plot_grid[2] * base_width
     height = plot_grid[1] * base_height
   }
-  # dir <- '/mn/sarpanitu/ansatte-u6/martintv/Documents/tpca paper/Text/Fig/'
   ggplot2::ggsave(paste0(name, '.', extension), ggplot_obj,
                   width = width, height = height, units = 'in')
 }

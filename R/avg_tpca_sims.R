@@ -1,10 +1,3 @@
-# Other runs:
-#   * Larger dimension, d.
-#   * Other change distributions (change sizes, sparsity (already done by sparsity plot)).
-#      - Smaller sizes, larger sizes.
-#   * Show variance, quantile plots.
-#   * All affected streams changes by the same size.
-
 avg_hellinger_sim <- function(d, n_cov_mat, n_sim, change_distr) {
   init_log_file <- function() {
     write('+++++++++++++++++++++++++++++++++++++++++++++', 
