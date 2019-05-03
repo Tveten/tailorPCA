@@ -78,8 +78,10 @@ get_prop_figure <- function(tpca_obj, show = FALSE) {
   prop_plot
 }
 
-
 tpca_summary_figure <- function(file_id, show = FALSE) {
+  # This function assumes that avg_hellinger_sim have been run, such that
+  # an .RData-object has been saved in the examples directory.
+  
   dir <- './examples/'
   # Always loads object named tpca_list.
   load(paste0(dir, 'tpca_list_', file_id, '.RData'))
