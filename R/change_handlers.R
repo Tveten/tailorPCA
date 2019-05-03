@@ -20,6 +20,26 @@ draw_change <- function(cor_mat, change_funcs, change_type, change_sparsity) {
        'cov_mat' = post_cov_mat_orig)
 }
 
+#' Draw a changed correlation matrix
+#' 
+#' Changes an input correlation matrix in the way specified by a vector
+#' indicating which dimensions are affected and functions that draws changes
+#' to the standard deviations and correlations separately.
+#' If the correlations should be changed (draw_cor != NULL), all combinations
+#' of the indices in affected_dims have their correlations changed.
+#' 
+#' @param cor_mat A correlation matrix to be changed.
+#' @param affected_dims A vector specifying which dimensions should be changed.
+#' @param do_nearPD A logical indicating whether the Matrix::nearPD function should
+#' be run on the changed correlation matrix to find the closest positve
+#' definite matrix to it. Highly recommended, as the changes in
+#' correlation are not guaranteed to result in a valid correlation matrix.
+#' @param draw_cor A function to draw n (any natural number) changes in correlation from.
+#' @param draw_sd A function to draw n (any natural number) changes in standard deviation from.
+#' 
+#' @return A changed correlation matrix, guaranteed to be positive definite if
+#' do_nearPD = TRUE.
+#' 
 #' @export
 change_cor_mat <- function(cor_mat, affected_dims, do_nearPD = TRUE,
                            draw_cor = NULL, draw_sd = NULL) {

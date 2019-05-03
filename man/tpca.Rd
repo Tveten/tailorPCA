@@ -15,9 +15,8 @@ tpca(cov_mat, change_distr = "full_uniform",
 definite.}
 
 \item{change_distr}{A string or a change distribution object. A string can be
-used to choose among a set of already implemented distributions:
-'full_uniform', 'mean_only', 'sd_only', 'cor_only'. Custom change
-distributions can be specified by using the \code{\link{set_uniform_cd}}
+used to choose among a set of already implemented distributions (see details).
+Custom distributions can be specified by using the \code{\link{set_uniform_cd}}
 function.}
 
 \item{divergence}{A string specifying which divergence metric to use. 
@@ -75,21 +74,31 @@ less general the choice of axes will be.
 Built in choices for change distributions are implemented as calls to
 \code{\link{set_uniform_cd}}:
 \describe{
-  \item{"full_uniform" (default)}{\code{set_uniform_cd(data_dim, 
-                                             prob        = rep(1/3, 3), 
-                                             sparsities  = 2:data_dim,
-                                             mean_int    = c(-1.5, 1.5), 
-                                             sd_int      = c(2.5^(-1), 2.5),
-                                             sd_inc_prob = 0.5,
-                                             cor_int     = c(0, 1))}}
+  \item{"full_uniform" (default)}{\code{set_uniform_cd(data_dim)}}
+  \item{"full_uniform_equal"}{\code{set_uniform_cd(data_dim, change_equal = TRUE)}}
+  \item{"full_uniform_large"}{\code{set_uniform_cd(data_dim, mean_int = c(-3, 3),
+                                                   sd_int  = c(4^(-1), 4),
+                                                   cor_int = c(0, 0.5))}}
+  \item{"full_uniform_small"}{\code{set_uniform_cd(data_dim, mean_int = c(-0.5, 0.5),
+                                                   sd_int  = c(1.5^(-1), 1.5),
+                                                   cor_int = c(0.5, 1))}}
+  \item{"semisparse_uniform"}{\code{set_uniform_cd(data_dim, 
+                                                   sparsities = 2:round(data_dim / 2))}}
   \item{"mean_only"}{\code{set_uniform_cd(data_dim, prob = c(1, 0, 0))}}
+  \item{"semisparse_mean_only"}{\code{set_uniform_cd(data_dim, prob = c(1, 0, 0),
+                                                     sparsities = 2:round(data_dim / 2))}}
   \item{"sd_only"}{\code{set_uniform_cd(data_dim, prob = c(0, 1, 0))}}
+  \item{"semisparse_sd_only"}{\code{set_uniform_cd(data_dim, prob = c(0, 1, 0),
+                                                     sparsities = 2:round(data_dim / 2))}}
   \item{"cor_only"}{\code{set_uniform_cd(data_dim, prob = c(0, 0, 1))}}
+  \item{"semisparse_cor_only"}{\code{set_uniform_cd(data_dim, prob = c(0, 0, 1),
+                                                     sparsities = 2:round(data_dim / 2))}}
 }
-
 See the references for more information.
 }
 \examples{
+cor_mat <- tpca::rcor_mat(10)  # Generate random correlation matrix.
+tpca(cor_mat)
 
 }
 \references{

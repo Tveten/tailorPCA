@@ -22,6 +22,35 @@ draw_change_tdpca <- function(cor_mat, lag, change_funcs, change_type, change_sp
        'cov_mat' = post_cov_mat_orig)
 }
 
+#' Draw a changed correlation matrix for use in dynamic TPCA.
+#' 
+#' Changes an input correlation matrix that is based on lagged samples. 
+#' This function assumes that the correlation matrix is based on
+#' observations \eqn{X_t = vec(x_{t - l}, x_{t - l + 1}, \ldots, x_t)}.
+#' 
+#' The lagged observations \eqn{X_t} imposes a block structure on its
+#' correlation matrix, where the l + 1 diagonal blocks are all estimates of the
+#' correlation matrix of \eqn{x_t}. \code{change_cor_mat_tdpca} takes a set of 
+#' indices indicating affected dimensions of \eqn{x_t}, and translates this into
+#' corresponding changes in the input correlation matrix of \eqn{X_t}.
+#' A change in one dimension of \eqn{x_t} (the unlagged, original data)
+#' corresponds to changes in (lag + 1) dimensions of \eqn{X_t}.
+#' See \code{\link{change_cor_mat}} for additional information.
+#' 
+#' @param cor_mat A correlation matrix of lagged observations to be changed.
+#' @param lag The lag used to obtain the lagged observations.
+#' @param affected_dims A vector specifying which unlagged dimensions 
+#' (dimensions of \eqn{x_t}) that should be changed.
+#' @param do_nearPD A logical indicating whether the Matrix::nearPD function should
+#' be run on the changed correlation matrix to find the closest positve
+#' definite matrix to it. Highly recommended, as the changes in
+#' correlation are not guaranteed to result in a valid correlation matrix.
+#' @param draw_cor A function to draw n (any natural number) changes in correlation from.
+#' @param draw_sd A function to draw n (any natural number) changes in standard deviation from.
+#' 
+#' @return A changed correlation matrix, guaranteed to be positive definite if
+#' do_nearPD = TRUE.
+#' 
 #' @export
 change_cor_mat_tdpca <- function(cor_mat, lag, affected_dims, do_nearPD = TRUE,
                                  draw_cor = NULL, draw_sd = NULL) {

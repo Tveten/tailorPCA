@@ -32,6 +32,11 @@ a change in the standard deviation being an increase.}
 of the interval that multiplicative changes in the correlations are drawn 
 from. Only values between 0 and 1 are allowed, i.e. a jump towards
 0 of the correlation coefficients.}
+
+\item{change_equal}{A logical for whether all affected dimensions should 
+change by the same amount, or by amounts independent of eachother.
+For example, if TRUE and the mean changes, \eqn{\mu_d = \mu} for
+all \eqn{d} in \eqn{D}, where \eqn{D} is the set of affected dims.}
 }
 \value{
 \code{set_uniform_cd} returns an S3 object of class "change_distr". 

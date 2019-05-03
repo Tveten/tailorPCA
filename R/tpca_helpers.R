@@ -1,3 +1,20 @@
+#' Principal component analysis
+#' 
+#' Performs efficient eigendecomposition of an input covariance matrix based on
+#' which principal axes that are wanted. If all axes are wanted, \code{\link{svd}}
+#' is used. \code{\link{RSpectra::eigs_sym}} is used if only the 
+#' highest or lowest eigenvalues with corresponding eigenvectors are requested.
+#' 
+#' @param cov_mat A covariance matrix.
+#' @param axes A vector indicating which principal axes are wanted.
+#' 
+#' @return \code{pca} returns an S3 object of class "pca". This is a list with 
+#' the following components:
+#' \describe{
+#'   \item{\code{vectors}}{A matrix with the chosen principal axes/eigenvectors as rows.}
+#'   \item{\code{values}}{A vector of the corresponding eigenvalues}
+#' }
+#'
 #' @export
 pca <- function(cov_mat, axes = 1:data_dim) {
   data_dim <- ncol(cov_mat)
