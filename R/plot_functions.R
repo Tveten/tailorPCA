@@ -20,8 +20,6 @@ ggplot_prop_max <- function(tpca_obj,
                             type     = unique(tpca_obj$change_type),
                             sparsity = unique(tpca_obj$change_sparsity),
                             title    = NULL,
-                            xlab     = 'Projection j',
-                            ylab     = 'Probability j is most sensitive',
                             print_p  = FALSE) {
   sims <- subset_sims(tpca_obj, type = type, sparsity = sparsity)
   prop_axes_max <- prop_axes_max(sims)
@@ -32,6 +30,10 @@ ggplot_prop_max <- function(tpca_obj,
     print(title)
     print(prop_max_df)
   }
+  
+  xlab <- 'Projection j'
+  ylab <- 'Prob. j is most sensitive'
+  
   ggplot2::ggplot(prop_max_df, ggplot2::aes(x = axes, y = prop_max)) +
     ggplot2::geom_bar(stat = 'identity') +
     ggplot2::theme_light() +
@@ -43,9 +45,7 @@ ggplot_prop_max <- function(tpca_obj,
 #' @export
 ggplot_types_mean <- function(tpca_obj, 
                               types = unique(tpca_obj$change_type),
-                              title = NULL,
-                              xlab  = 'Projection j',
-                              ylab  = 'E[ Hellinger distance ]') {
+                              title = NULL) {
   data_dim <- nrow(tpca_obj$divergence_sim)
   type_subsets <- lapply(types, function(type) subset_sims(tpca_obj, type = type))
   type_means <- lapply(type_subsets, rowMeans)
@@ -64,6 +64,8 @@ ggplot_types_mean <- function(tpca_obj,
   line_cols <- c('#FF0000FF', '#0000FFFF', '#00FF00FF', 'black')
   names(line_sizes) <- ordered_levels
   names(line_cols) <- ordered_levels
+  xlab <- 'Projection j'
+  ylab <- get_ylab(tpca$divergence)
   
   ggplot2::ggplot(means_df, ggplot2::aes(x = axis, y = divergence, color = type)) +
     ggplot2::geom_line(ggplot2::aes(size = type)) +
@@ -78,9 +80,7 @@ ggplot_types_mean <- function(tpca_obj,
 #' @export
 ggplot_sparsity_mean <- function(tpca_obj, 
                                  sparsities = unique(tpca_obj$change_sparsity),
-                                 title      = NULL,
-                                 xlab       = 'Projection j',
-                                 ylab       = 'E[ Hellinger distance ]') {
+                                 title      = NULL) {
   set_color <- function(sparsities) {
     n_legends <- min(length(sparsities), 5)
     label_ind <- floor(seq(1, length(sparsities), length.out = n_legends))
@@ -124,6 +124,8 @@ ggplot_sparsity_mean <- function(tpca_obj,
   
   col_obj <- set_color(sparsities)
   line_sizes <- c(rep(0.3, length(col_obj$col) - 1), 0.6)
+  xlab <- 'Projection j'
+  ylab <- get_ylab(tpca$divergence)
   
   ggplot2::ggplot(means_df, ggplot2::aes(x = axis, y = divergence, color = K)) +
     ggplot2::geom_line(ggplot2::aes(size = K)) +
@@ -141,9 +143,7 @@ ggplot_sparsity_mean <- function(tpca_obj,
 #' @export
 ggplot_quantiles <- function(tpca_obj, 
                              quantiles = c(0.25, 0.975),
-                             title     = NULL,
-                             xlab      = 'Projection j',
-                             ylab      = 'Hellinger distance') {
+                             title     = NULL) {
   divergence_sims <- tpca_obj$divergence_sim
   data_dim <- nrow(divergence_sims)
   mean_divergence <- rowMeans(divergence_sims)
@@ -152,6 +152,10 @@ ggplot_quantiles <- function(tpca_obj,
                         'mean' = mean_divergence)
   plot_df <- cbind(plot_df, t(divergence_quantiles))
   plot_df <- reshape2::melt(plot_df, id.vars = 'axis')
+  
+  xlab <- 'Projection j'
+  ylab <- get_ylab(tpca$divergence)
+  
   ggplot2::ggplot(plot_df, ggplot2::aes(x = axis, y = value, linetype = variable)) +
     ggplot2::geom_line() +
     ggplot2::theme_light() +
@@ -164,9 +168,7 @@ ggplot_quantiles <- function(tpca_obj,
 #' @export
 ggplot_singles <- function(tpca_obj, 
                            n = NULL,
-                           title = NULL,
-                           xlab  = 'Projection j',
-                           ylab  = 'Hellinger distance') {
+                           title = NULL) {
   data_dim <- nrow(tpca_obj$divergence_sim)
   n_sim <- ncol(tpca_obj$divergence_sim)
   types = unique(tpca_obj$change_type)
@@ -188,6 +190,8 @@ ggplot_singles <- function(tpca_obj,
     line_cols <- c('#FF0000FF', '#0000FFFF', '#00FF00FF')
     names(line_sizes) <- ordered_levels
     names(line_cols) <- ordered_levels
+    xlab <- 'Projection j'
+    ylab <- get_ylab(tpca$divergence)
     
     ggplot2::ggplot(divergence_df, ggplot2::aes(x = axis, y = divergence, color = type)) +
       ggplot2::geom_line(ggplot2::aes(size = type)) +

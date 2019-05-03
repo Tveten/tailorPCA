@@ -47,3 +47,11 @@ first_up <- function(x) {
   substr(x, 1, 1) <- toupper(substr(x, 1, 1))
   x
 }
+
+get_ylab <- function(divergence) {
+  if (divergence == 'normal_hellinger') ylab <- 'Hellinger dist.'
+  else if (divergence == 'normal_KL') ylab <- 'KL divergence'
+  else if (divergence == 'normal_bhat') ylab <- 'Bhattacharyya dist.'
+  else ylab <- 'Divergence'
+  ylab
+}

@@ -142,7 +142,8 @@ tpca <- function(cov_mat,
                       'prop_axes_max'   = prop_axes_max,
                       'divergence_sim'  = divergence_sim,
                       'change_type'     = change_type,
-                      'change_sparsity' = change_sparsity)
+                      'change_sparsity' = change_sparsity,
+                      'divergence'      = divergence)
   invisible(structure(return_list, class = 'tpca'))
 }
 
