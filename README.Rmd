@@ -11,7 +11,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   echo = TRUE,
   out.width='750px', dpi=200,
-  comment = "#>"
+  comment = "#>",
+  fig.path = "README-"
+
 )
 ```
 
@@ -24,17 +26,19 @@ change scenarios. Functionality for both regular PCA and dynamic PCA exists.
 
 ## Overview
 Functionality:
+
 * A function for tailoring PCA to a regular covariance matrix.
-* A function for tailoring PCA to a covariance matrix based on lagged observations.
+* A function for tailoring PCA to a covariance matrix based on lagged observations, i.e., a dynamic PCA variant.
 * A generic function for setting up a uniform change distribution.
 * Functions for generating random correlation matrices, covariance matrices and
   correlation matrix estimates.
-* Plot functions.
+* Summary and plot functions.
 
-TPCA is designed to be used in for instance sensor network applications,
+TPCA is designed to be used in for instance high-dimensional sensor network applications,
 where changes in the mean and/or covariance matrix indicates a system fault.
 TPCA helps reduce the dimension to those principal components that are most
-sensitive to the relevant changes.
+sensitive to the relevant changes. This both saves computation and can
+increase the precision or speed with which changes are detected.
 
 ## Installation
 From inside `R`, use the following command:
@@ -44,9 +48,17 @@ devtools::install_github("Tveten/tpca")
 # library(tpca)
 ```
 
-## Description
-
 ## Usage
-See the documentation of the tpca-function.
+```{r example, echo = TRUE}
+library(tpca)
+cor_mat <- rcor_mat(10)  # Generate random correlation matrix.
+tpca_obj <- tpca(cor_mat, change_distr = 'semisparse_uniform', cutoff = 0.99)
+ggplot_types(tpca_obj)
+ggplot_sparsities(tpca_obj)
+ggplot_prop(tpca_obj)
+summary(tpca_obj)
+```
+
+## Description
 
 ## References
