@@ -63,16 +63,16 @@ get_avg_figure <- function(tpca_obj, title = FALSE, show = FALSE) {
     file_id
   }
   
-  if (title) type_plot <- ggplot_types_mean(tpca_obj, title = get_title())
-  else type_plot <- ggplot_types_mean(tpca_obj)
-  sparsity_plot <- ggplot_sparsity_mean(tpca_obj)
+  if (title) type_plot <- ggplot_types(tpca_obj, title = get_title())
+  else type_plot <- ggplot_types(tpca_obj)
+  sparsity_plot <- ggplot_sparsities(tpca_obj)
   
   if (show) show(gridExtra::grid.arrange(type_plot, sparsity_plot, nrow = 1))
   list('type' = type_plot, 'sparsity' = sparsity_plot)
 }
 
 get_prop_figure <- function(tpca_obj, show = FALSE) {
-  prop_plot <- ggplot_prop_max(tpca_obj)
+  prop_plot <- ggplot_prop(tpca_obj)
   
   if (show) show(prop_plot)
   prop_plot

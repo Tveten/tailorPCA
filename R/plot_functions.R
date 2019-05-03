@@ -9,7 +9,7 @@ plot.tpca <- function(tpca_obj, ...) {
   plot_funcs <- list(ggplot_prop, 
                      ggplot_quantiles, 
                      ggplot_types, 
-                     ggplot_sparsity)
+                     ggplot_sparsities)
   capture.output(Map(function(f, title) f(tpca_obj, title = title),
                      plot_funcs, titles))
   invisible(NULL)
@@ -78,9 +78,9 @@ ggplot_types <- function(tpca_obj,
 }
 
 #' @export
-ggplot_sparsity <- function(tpca_obj, 
-                            sparsities = unique(tpca_obj$change_sparsity),
-                            title      = NULL) {
+ggplot_sparsities <- function(tpca_obj, 
+                              sparsities = unique(tpca_obj$change_sparsity),
+                              title      = NULL) {
   set_color <- function(sparsities) {
     n_legends <- min(length(sparsities), 5)
     label_ind <- floor(seq(1, length(sparsities), length.out = n_legends))
