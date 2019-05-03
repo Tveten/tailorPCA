@@ -43,8 +43,8 @@ rcor_mat <- function(d, k0 = d, alphad = 1) {
 #' which dimensions that are the correlated ones.
 #' 
 #' @export
-rcov_mat <- function(d, k0 = d, range_sd = c(0.2, 5)) {
-  R <- rcor_mat(d, k0)
+rcov_mat <- function(d, k0 = d, range_sd = c(0.2, 5), ...) {
+  R <- rcor_mat(d, k0, ...)
   sigma <- diag(rep(runif(d, range_sd[1], range_sd[2])), nrow = d)
   structure(sigma %*% R %*% sigma, 'which_dims_cor' = 1:k0)
 }
@@ -64,11 +64,11 @@ rcov_mat <- function(d, k0 = d, range_sd = c(0.2, 5)) {
 #' how many samples the estimate is based on.
 #' 
 #' @export
-rcor_mat_est <- function(d, k0 = d, n = 2 * d) {
+rcor_mat_est <- function(d, k0 = d, n = 2 * d, ...) {
   # d:  data dimension
   # k0: d - k0 is the number of completely independent dimensions.
   # n:  Number of observations that the estimated cor_mat is based on.
-  Sigma <- rcor_mat(d, k0)
+  Sigma <- rcor_mat(d, k0, ...)
   Sigma_est <- 1 / (n - 1) * rWishart(1, n, Sigma)[, , 1]
   structure(standardize_cov_mat(Sigma_est), 'n_obs' = n)
 }
