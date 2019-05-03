@@ -16,20 +16,25 @@ knitr::opts_chunk$set(
 ```
 
 # tpca
-
-An `R` package for deciding which principal components of the data that should be kept when detection
-of changepoints in the mean vector or covariance matrix is the aim. The decision is
-*tailored* to a chosen change distribution; a set of relevant distributional changes.
+An `R` package for automatically selecting which principal components
+to keep for detecting changes in the mean and/or covariance matrix.
+The choice of principal axes to project data onto is *tailored* to a normal 
+state covariance matrix and a customizable distribution over relevant 
+change scenarios. Functionality for both regular PCA and dynamic PCA exists.
 
 ## Overview
 Functionality:
-*
-*
-* 
-* 
-* Summary and plot functions.
+* A function for tailoring PCA to a regular covariance matrix.
+* A function for tailoring PCA to a covariance matrix based on lagged observations.
+* A generic function for setting up a uniform change distribution.
+* Functions for generating random correlation matrices, covariance matrices and
+  correlation matrix estimates.
+* Plot functions.
 
-A reason to use tpca. Where can it be used
+TPCA is designed to be used in for instance sensor network applications,
+where changes in the mean and/or covariance matrix indicates a system fault.
+TPCA helps reduce the dimension to those principal components that are most
+sensitive to the relevant changes.
 
 ## Installation
 From inside `R`, use the following command:
@@ -42,5 +47,6 @@ devtools::install_github("Tveten/tpca")
 ## Description
 
 ## Usage
+See the documentation of the tpca-function.
 
 ## References

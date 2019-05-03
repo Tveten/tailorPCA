@@ -4,11 +4,11 @@ Title: A function for tailoring PCA to change detection
 Version: 0.0.0.9001
 Author: Martin Tveten
 Maintainer: Martin Tveten <matveten@gmail.com>
-Description: Functionality for tailoring the choice of which principal 
-    components to keep when detection of changepoints in the mean vector 
-    or covariance matrix is the aim. The choice of principal axes to 
-    project data onto is based on a normal state covariance matrix and
-    a customizable distribution over relevant change scenarios.
+Description: Functionality for automatically selecting which principal components
+    to keep for detecting changes in the mean and/or covariance matrix.
+    The choice of principal axes to project data onto is tailored to a normal 
+    state covariance matrix and a customizable distribution over relevant 
+    change scenarios. Both regular PCA and dynamic PCA can be handled.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
