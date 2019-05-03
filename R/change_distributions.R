@@ -127,115 +127,64 @@ set_uniform_cd <- function(data_dim,
 change_distr_env <- new.env(hash = FALSE)
 
 change_distr_env$full_uniform <- function(data_dim) {
-  set_uniform_cd(data_dim,
-                 prob        = rep(1/3, 3), 
-                 sparsities  = 2:data_dim,
-                 mean_int    = c(-1.5, 1.5), 
-                 sd_int      = c(2.5^(-1), 2.5),
-                 sd_inc_prob = 0.5,
-                 cor_int     = c(0, 1))
+  set_uniform_cd(data_dim)
 }
 
 change_distr_env$full_uniform_equal <- function(data_dim) {
-  set_uniform_cd(data_dim,
-                 prob         = rep(1/3, 3), 
-                 sparsities   = 2:data_dim,
-                 mean_int     = c(-1.5, 1.5), 
-                 sd_int       = c(2.5^(-1), 2.5),
-                 sd_inc_prob  = 0.5,
-                 cor_int      = c(0, 1),
-                 change_equal = TRUE)
+  set_uniform_cd(data_dim, change_equal = TRUE)
 }
 
 change_distr_env$full_uniform_large <- function(data_dim) {
   set_uniform_cd(data_dim,
-                 prob         = rep(1/3, 3), 
-                 sparsities   = 2:data_dim,
                  mean_int     = c(-3, 3), 
                  sd_int       = c(4^(-1), 4),
-                 sd_inc_prob  = 0.5,
                  cor_int      = c(0, 0.5))
 }
 
 change_distr_env$full_uniform_small <- function(data_dim) {
   set_uniform_cd(data_dim,
-                 prob         = rep(1/3, 3), 
-                 sparsities   = 2:data_dim,
-                 mean_int     = c(-0.5, 5), 
+                 mean_int     = c(-0.5, 0.5), 
                  sd_int       = c(1.5^(-1), 1.5),
-                 sd_inc_prob  = 0.5,
                  cor_int      = c(0.5, 1))
 }
 
 change_distr_env$semisparse_uniform <- function(data_dim) {
   set_uniform_cd(data_dim,
-                 prob        = rep(1/3, 3), 
-                 sparsities  = 2:round(data_dim / 2),
-                 mean_int    = c(-1.5, 1.5), 
-                 sd_int      = c(2.5^(-1), 2.5),
-                 sd_inc_prob = 0.5,
-                 cor_int     = c(0, 1))
+                 sparsities  = 2:round(data_dim / 2))
 }
 
 change_distr_env$mean_only <- function(data_dim) {
   set_uniform_cd(data_dim,
-                 prob        = c(1, 0, 0), 
-                 sparsities  = 2:data_dim,
-                 mean_int    = c(-1.5, 1.5), 
-                 sd_int      = c(2.5^(-1), 2.5),
-                 sd_inc_prob = 0.5,
-                 cor_int     = c(0, 1))
+                 prob        = c(1, 0, 0))
 }
 
 change_distr_env$semisparse_mean_only <- function(data_dim) {
   set_uniform_cd(data_dim,
                  prob        = c(1, 0, 0), 
-                 sparsities  = 2:round(data_dim / 2),
-                 mean_int    = c(-1.5, 1.5), 
-                 sd_int      = c(2.5^(-1), 2.5),
-                 sd_inc_prob = 0.5,
-                 cor_int     = c(0, 1))
+                 sparsities  = 2:round(data_dim / 2))
 }
 
 
 change_distr_env$sd_only <- function(data_dim) {
   set_uniform_cd(data_dim,
-                 prob        = c(0, 1, 0), 
-                 sparsities  = 2:data_dim,
-                 mean_int    = c(-1.5, 1.5), 
-                 sd_int      = c(2.5^(-1), 2.5),
-                 sd_inc_prob = 0.5,
-                 cor_int     = c(0, 1))
+                 prob        = c(0, 1, 0))
 }
 
 change_distr_env$semisparse_sd_only <- function(data_dim) {
   set_uniform_cd(data_dim,
                  prob        = c(0, 1, 0), 
-                 sparsities  = 2:round(data_dim / 2),
-                 mean_int    = c(-1.5, 1.5), 
-                 sd_int      = c(2.5^(-1), 2.5),
-                 sd_inc_prob = 0.5,
-                 cor_int     = c(0, 1))
+                 sparsities  = 2:round(data_dim / 2))
 }
 
 change_distr_env$cor_only <- function(data_dim) {
   set_uniform_cd(data_dim,
-                 prob        = c(0, 0, 1), 
-                 sparsities  = 2:data_dim,
-                 mean_int    = c(-1.5, 1.5), 
-                 sd_int      = c(2.5^(-1), 2.5),
-                 sd_inc_prob = 0.5,
-                 cor_int     = c(0, 1))
+                 prob        = c(0, 0, 1))
 }
 
 change_distr_env$semisparse_cor_only <- function(data_dim) {
   set_uniform_cd(data_dim,
                  prob        = c(0, 0, 1), 
-                 sparsities  = 2:round(data_dim / 2),
-                 mean_int    = c(-1.5, 1.5), 
-                 sd_int      = c(2.5^(-1), 2.5),
-                 sd_inc_prob = 0.5,
-                 cor_int     = c(0, 1))
+                 sparsities  = 2:round(data_dim / 2))
 }
 
 get_change_distr <- function(change_distr, data_dim) {
