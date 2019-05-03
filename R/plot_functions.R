@@ -6,21 +6,21 @@ plot.tpca <- function(tpca_obj, ...) {
                  'Pointwise 0.25 and 0.975 quantiles of the divergences',
                  'Estimated divergence for different change types',
                  'Estimated divergence for different change sparsities')
-  plot_funcs <- list(ggplot_prop_max, 
+  plot_funcs <- list(ggplot_prop, 
                      ggplot_quantiles, 
-                     ggplot_types_mean, 
-                     ggplot_sparsity_mean)
+                     ggplot_types, 
+                     ggplot_sparsity)
   capture.output(Map(function(f, title) f(tpca_obj, title = title),
                      plot_funcs, titles))
   invisible(NULL)
 }
 
 #' @export
-ggplot_prop_max <- function(tpca_obj, 
-                            type     = unique(tpca_obj$change_type),
-                            sparsity = unique(tpca_obj$change_sparsity),
-                            title    = NULL,
-                            print_p  = FALSE) {
+ggplot_prop <- function(tpca_obj, 
+                        type     = unique(tpca_obj$change_type),
+                        sparsity = unique(tpca_obj$change_sparsity),
+                        title    = NULL,
+                        print_p  = FALSE) {
   sims <- subset_sims(tpca_obj, type = type, sparsity = sparsity)
   prop_axes_max <- prop_axes_max(sims)
   data_dim <- length(prop_axes_max)
@@ -43,9 +43,9 @@ ggplot_prop_max <- function(tpca_obj,
 }
 
 #' @export
-ggplot_types_mean <- function(tpca_obj, 
-                              types = unique(tpca_obj$change_type),
-                              title = NULL) {
+ggplot_types <- function(tpca_obj, 
+                         types = unique(tpca_obj$change_type),
+                         title = NULL) {
   data_dim <- nrow(tpca_obj$divergence_sim)
   type_subsets <- lapply(types, function(type) subset_sims(tpca_obj, type = type))
   type_means <- lapply(type_subsets, rowMeans)
@@ -78,9 +78,9 @@ ggplot_types_mean <- function(tpca_obj,
 }
 
 #' @export
-ggplot_sparsity_mean <- function(tpca_obj, 
-                                 sparsities = unique(tpca_obj$change_sparsity),
-                                 title      = NULL) {
+ggplot_sparsity <- function(tpca_obj, 
+                            sparsities = unique(tpca_obj$change_sparsity),
+                            title      = NULL) {
   set_color <- function(sparsities) {
     n_legends <- min(length(sparsities), 5)
     label_ind <- floor(seq(1, length(sparsities), length.out = n_legends))
