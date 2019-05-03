@@ -1,3 +1,4 @@
+#' @export
 summary.tpca <- function(tpca_obj) {
   cat('Probability of projection j being the most sensitive (the projections are ordered decreasingly w.r.t variance): \n')
   prop <- tpca_obj$prop_axes_max
