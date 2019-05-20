@@ -142,7 +142,7 @@ ggplot_sparsities <- function(tpca_obj,
 
 #' @export
 ggplot_quantiles <- function(tpca_obj, 
-                             quantiles = c(0.25, 0.975),
+                             quantiles = c(0.025, 0.975),
                              title     = NULL) {
   divergence_sims <- tpca_obj$divergence_sim
   data_dim <- nrow(divergence_sims)
