@@ -149,3 +149,37 @@ test_obs_needed <- function(data_dim, n) {
     obs_needed(cor_mat_est, 0.01)
   }))
 }
+
+test_divergence_tpca <- function(D = 20, plot_type = 'types') {
+  cor_mat <- rcor_mat(D)
+  tpca_hel <- tpca(cor_mat)
+  tpca_KL <- tpca(cor_mat, divergence = 'normal_KL')
+  tpca_bhat <- tpca(cor_mat, divergence = 'normal_bhat')
+  
+  if (plot_type == 'types') {
+    hel_plot <- ggplot_types(tpca_hel)
+    KL_plot <- ggplot_types(tpca_KL)
+    bhat_plot <- ggplot_types(tpca_bhat)
+  }
+  if (plot_type == 'sparsities') {
+    hel_plot <- ggplot_sparsities(tpca_hel)
+    KL_plot <- ggplot_sparsities(tpca_KL)
+    bhat_plot <- ggplot_sparsities(tpca_bhat)
+  }
+  if (plot_type == 'quantile') {
+    hel_plot <- ggplot_quantiles(tpca_hel)
+    KL_plot <- ggplot_quantiles(tpca_KL)
+    bhat_plot <- ggplot_quantiles(tpca_bhat)
+  }
+  if (plot_type == 'prop') {
+    hel_plot <- ggplot_prop(tpca_hel)
+    KL_plot <- ggplot_prop(tpca_KL)
+    bhat_plot <- ggplot_prop(tpca_bhat)
+  }
+  if (plot_type == 'singles') {
+    hel_plot <- ggplot_singles(tpca_hel)
+    KL_plot <- ggplot_singles(tpca_KL)
+    bhat_plot <- ggplot_singles(tpca_bhat)
+  }
+  gridExtra::grid.arrange(hel_plot, KL_plot, bhat_plot, nrow = 1)
+}

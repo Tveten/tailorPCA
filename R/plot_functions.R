@@ -66,13 +66,14 @@ ggplot_types <- function(tpca_obj,
   names(line_cols) <- ordered_levels
   xlab <- 'Projection j'
   ylab <- paste0('E[ ', get_ylab(tpca_obj$divergence), ' ]')
+  ylim <- set_ylim(tpca_obj$divergence, means_df)
   
   ggplot2::ggplot(means_df, ggplot2::aes(x = axis, y = divergence, color = type)) +
     ggplot2::geom_line(ggplot2::aes(size = type)) +
     ggplot2::theme_light() +
     ggplot2::labs(x = xlab, y = ylab) +
     ggplot2::ggtitle(title) +
-    ggplot2::scale_y_continuous(limits = c(0, 1)) +
+    ggplot2::scale_y_continuous(limits = ylim) +
     ggplot2::scale_color_manual('Change \n type', values = line_cols) +
     ggplot2::scale_size_manual(values = line_sizes, guide = FALSE)
 }
@@ -126,13 +127,14 @@ ggplot_sparsities <- function(tpca_obj,
   line_sizes <- c(rep(0.3, length(col_obj$col) - 1), 0.6)
   xlab <- 'Projection j'
   ylab <- paste0('E[ ', get_ylab(tpca_obj$divergence), ' ]')
+  ylim <- set_ylim(tpca_obj$divergence, means_df)
   
   ggplot2::ggplot(means_df, ggplot2::aes(x = axis, y = divergence, color = K)) +
     ggplot2::geom_line(ggplot2::aes(size = K)) +
     ggplot2::theme_light() +
     ggplot2::labs(x = xlab, y = ylab) +
     ggplot2::ggtitle(title) +
-    ggplot2::scale_y_continuous(limits = c(0, 1)) +
+    ggplot2::scale_y_continuous(limits = ylim) +
     ggplot2::scale_color_manual('Change \n sparsity', 
                                 values = col_obj$col,
                                 breaks = col_obj$legend_breaks, 
@@ -152,15 +154,18 @@ ggplot_quantiles <- function(tpca_obj,
                         'mean' = mean_divergence)
   plot_df <- cbind(plot_df, t(divergence_quantiles))
   plot_df <- reshape2::melt(plot_df, id.vars = 'axis')
+  plot_df$divergence <- plot_df$value
   
   xlab <- 'Projection j'
   ylab <- get_ylab(tpca_obj$divergence)
+  ylim <- set_ylim(tpca_obj$divergence, plot_df)
   
-  ggplot2::ggplot(plot_df, ggplot2::aes(x = axis, y = value, linetype = variable)) +
+  ggplot2::ggplot(plot_df, ggplot2::aes(x = axis, y = divergence, linetype = variable)) +
     ggplot2::geom_line() +
     ggplot2::theme_light() +
     ggplot2::labs(x = xlab, y = ylab) +
     ggplot2::ggtitle(title) +
+    ggplot2::scale_y_continuous(limits = ylim) +
     ggplot2::scale_linetype_manual(guide = FALSE, 
                           values = c(1, rep(2, nrow(divergence_quantiles))))
 }
@@ -192,13 +197,14 @@ ggplot_singles <- function(tpca_obj,
     names(line_cols) <- ordered_levels
     xlab <- 'Projection j'
     ylab <- get_ylab(tpca_obj$divergence)
+    ylim <- set_ylim(tpca_obj$divergence, divergence_df)
     
     ggplot2::ggplot(divergence_df, ggplot2::aes(x = axis, y = divergence, color = type)) +
       ggplot2::geom_line(ggplot2::aes(size = type)) +
       ggplot2::theme_light() +
       ggplot2::labs(x = xlab, y = ylab) +
       ggplot2::ggtitle(title) +
-      ggplot2::scale_y_continuous(limits = c(0, 1)) +
+      ggplot2::scale_y_continuous(limits = ylim) +
       ggplot2::scale_color_manual('Change \n type', values = line_cols) +
       ggplot2::scale_size_manual(values = line_sizes, guide = FALSE)
   } else {
@@ -212,13 +218,14 @@ ggplot_singles <- function(tpca_obj,
     colnames(divergence_subset) <- unlist(shown_names)
     divergence_df <- reshape2::melt(divergence_subset)
     names(divergence_df) <- c('axis', 'type', 'divergence')
+    ylim <- set_ylim(tpca_obj$divergence, divergence_df)
     
     ggplot2::ggplot(divergence_df, ggplot2::aes(x = axis, y = divergence, color = type)) +
       ggplot2::geom_line() +
       ggplot2::theme_light() +
       ggplot2::labs(x = xlab, y = ylab) +
       ggplot2::ggtitle(title) +
-      ggplot2::scale_y_continuous(limits = c(0, 1)) +
+      ggplot2::scale_y_continuous(limits = ylim) +
       ggplot2::guides(color = ggplot2::guide_legend(title = 'Change \n type, sparsity'))
   }
 }

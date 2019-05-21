@@ -54,3 +54,9 @@ get_ylab <- function(divergence) {
   else ylab <- 'Divergence'
   ylab
 }
+
+set_ylim <- function(divergence, plot_df) {
+  if (divergence == 'normal_hellinger') ylim <- c(0, 1)
+  else ylim <- c(0, max(plot_df$divergence))
+  ylim
+}
