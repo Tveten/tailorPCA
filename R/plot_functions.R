@@ -3,7 +3,7 @@ plot.tpca <- function(tpca_obj, ...) {
   par(ask = TRUE)
   on.exit(par(ask = FALSE))
   titles <- list('Estimated probability of axis n being the most sensitive',
-                 'Pointwise 0.25 and 0.975 quantiles of the divergences',
+                 'Pointwise 0.025 and 0.975 quantiles of the divergences',
                  'Estimated divergence for different change types',
                  'Estimated divergence for different change sparsities')
   plot_funcs <- list(ggplot_prop, 
