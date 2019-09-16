@@ -1,7 +1,8 @@
 #' Generate a random correlation matrix
 #' 
-#' A wrapper for \code{\link{clusterGeneration::rcorrmatrix}}, but with the possibility of
-#' setting some dimensions to being independent of the rest. 
+#' A wrapper for \code{\link{effrcor::rcorrmatrix}} (an efficient
+#' implementation of \code{\link{clusterGeneration::rcorrmatrix}}), but with the 
+#' possibility of setting some dimensions to being independent of the rest. 
 #' 
 #' @param d An integer specifying the dimension of the correlation matrix.
 #' @param k0 An integer. d - k0 are the number of independent dimensions.
@@ -16,7 +17,7 @@ rcor_mat <- function(d, k0 = d, alphad = 1) {
   
   if (k0 == 0) return(diag(rep(1, d)))
   
-  Sigma <- clusterGeneration::rcorrmatrix(k0, alphad = alphad)
+  Sigma <- effrcor::rcorrmatrix(k0, alphad = alphad)
   if (k0 != d) {
     identity.mat <- diag(rep(1, d - k0))
     zero.mat <- matrix(0, ncol = d - k0, nrow = k0)
