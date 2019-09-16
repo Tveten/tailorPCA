@@ -19,10 +19,10 @@ rcor_mat <- function(d, k0 = d, alphad = 1) {
   
   Sigma <- effrcor::rcorrmatrix(k0, alphad = alphad)
   if (k0 != d) {
-    identity.mat <- diag(rep(1, d - k0))
-    zero.mat <- matrix(0, ncol = d - k0, nrow = k0)
-    Sigma <- cbind(Sigma, zero.mat)
-    Sigma <- rbind(Sigma, cbind(t(zero.mat), identity.mat))
+    identity_mat <- diag(rep(1, d - k0))
+    zero_mat <- matrix(0, ncol = d - k0, nrow = k0)
+    Sigma <- cbind(Sigma, zero_mat)
+    Sigma <- rbind(Sigma, cbind(t(zero_mat), identity_mat))
   }
   structure(Sigma, 'which_dims_cor' = 1:k0)
 }
