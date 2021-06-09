@@ -5,7 +5,7 @@ assert_cov_mat <- function(cov_mat) {
   numeric_msg <- paste0(cov_mat_name, ' must be numeric.')
   assertthat::assert_that(is.numeric(cov_mat), msg = numeric_msg)
   matrix_msg <- paste0(cov_mat_name, ' must be of class "matrix".')
-  assertthat::assert_that(class(cov_mat) == 'matrix', msg = matrix_msg)
+  assertthat::assert_that("matrix" %in% class(cov_mat), msg = matrix_msg)
   symmetric_msg <- paste0(cov_mat_name, ' is not a symmetric matrix.')
   assertthat::assert_that(isSymmetric(cov_mat), msg = symmetric_msg)
   posdef_msg <- paste0(cov_mat_name, ' is not a positive definite matrix (some eigenvalues are < 1e-16).')
